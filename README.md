@@ -20,3 +20,5 @@ https://www.w3.org/TR/webauthn/
 https://www.scottbrady91.com/FIDO/A-FIDO2-Primer-and-Proof-of-Concept-using-ASPNET-Core
 
 https://github.com/herrjemand/awesome-webauthn
+
+https://developers.yubico.com/FIDO2/Libraries/Using_a_library.html
