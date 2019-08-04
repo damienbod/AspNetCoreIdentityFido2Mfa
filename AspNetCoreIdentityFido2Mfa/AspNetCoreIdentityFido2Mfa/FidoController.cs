@@ -14,18 +14,18 @@ using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Fido2Demo
+namespace AspNetCoreIdentityFido2Mfa
 {
 
     [Route("api/[controller]")]
-    public class MyController : Controller
+    public class FidoController : Controller
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
         private string _origin;
         public static readonly DevelopmentInMemoryStore DemoStorage = new DevelopmentInMemoryStore();
 
-        public MyController(IConfiguration config)
+        public FidoController(IConfiguration config)
         {
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
