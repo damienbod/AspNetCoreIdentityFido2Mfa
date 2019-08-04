@@ -16,3 +16,7 @@ https://www.troyhunt.com/beyond-passwords-2fa-u2f-and-google-advanced-protection
 https://fidoalliance.org/fido2/
 
 https://www.w3.org/TR/webauthn/
+
+https://www.scottbrady91.com/FIDO/A-FIDO2-Primer-and-Proof-of-Concept-using-ASPNET-Core
+
+https://github.com/herrjemand/awesome-webauthn
