@@ -36,6 +36,17 @@ namespace AspNetCoreIdentityFido2Mfa
 
             services.AddControllers();
             services.AddRazorPages();
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(2);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +71,8 @@ namespace AspNetCoreIdentityFido2Mfa
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
