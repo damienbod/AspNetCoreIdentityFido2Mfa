@@ -34,6 +34,7 @@ namespace AspNetCoreIdentityFido2Mfa
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddControllers();
             services.AddRazorPages();
         }
 
@@ -63,6 +64,7 @@ namespace AspNetCoreIdentityFido2Mfa
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }
