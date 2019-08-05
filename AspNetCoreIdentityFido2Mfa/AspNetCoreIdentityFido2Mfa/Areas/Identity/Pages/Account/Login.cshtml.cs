@@ -90,6 +90,10 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
+                    return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                }
+                if (result.RequiresTwoFactor)
+                {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)

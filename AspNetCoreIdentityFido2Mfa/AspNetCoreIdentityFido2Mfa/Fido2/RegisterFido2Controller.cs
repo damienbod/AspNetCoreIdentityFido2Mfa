@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Fido2NetLib.Development;
 using static Fido2NetLib.Fido2;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,9 +25,11 @@ namespace AspNetCoreIdentityFido2Mfa
         public static IMetadataService _mds;
         private string _origin;
         private readonly Fido2Storage _fido2Storage;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public RegisterFido2Controller(IConfiguration config, Fido2Storage fido2Storage)
+        public RegisterFido2Controller(IConfiguration config, Fido2Storage fido2Storage, UserManager<IdentityUser> userManager)
         {
+            _userManager = userManager;
             _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
@@ -148,6 +151,16 @@ namespace AspNetCoreIdentityFido2Mfa
                 });
 
                 // 4. return "ok" to the client
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return Json(new CredentialMakeResult { Status = "error", ErrorMessage = $"Unable to load user with ID '{_userManager.GetUserId(User)}'." });
+                }
+
+                await _userManager.SetTwoFactorEnabledAsync(user, true);
+                var userId = await _userManager.GetUserIdAsync(user);
+
                 return Json(success);
             }
             catch (Exception e)

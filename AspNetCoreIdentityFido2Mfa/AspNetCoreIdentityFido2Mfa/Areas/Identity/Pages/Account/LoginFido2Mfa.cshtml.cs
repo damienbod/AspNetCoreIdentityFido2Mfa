@@ -6,12 +6,17 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class MfaModel : PageModel
     {
+        public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
+
         public void OnGet()
         {
         }
 
         public void OnPost()
         {
+            string tt = "";
         }
     }
 }

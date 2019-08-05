@@ -137,7 +137,5 @@ async function verifyAssertionWithServer(assertedCredential) {
         timer: 2000
     });
 
-
-    // redirect to dashboard to show keys
-    window.location.href = "/dashboard/" + value("#login-username");
+    window.location.href = "/";
 }
