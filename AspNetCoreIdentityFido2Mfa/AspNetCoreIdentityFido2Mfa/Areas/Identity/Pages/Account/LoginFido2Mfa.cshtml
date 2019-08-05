@@ -1,12 +1,10 @@
-﻿@page "/Fido2Mfa/{handler?}"
+﻿@page 
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@model AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage.MfaModel
+@model AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.MfaModel
 @{
-    Layout = "_Layout.cshtml";
-    ViewData["Title"] = "Two-factor authentication (2FA)";
-    ViewData["ActivePage"] = ManageNavPages.Fido2Mfa;
+    ViewData["Title"] = "Login with Fido2 MFA";
 }
 
 <h4>@ViewData["Title"]</h4>
@@ -21,19 +19,12 @@
         <div class="columns">
             <div class="column is-4">
 
-                <h3 class="title is-3">Add a Fido2 MFA</h3>
-                <form action="/Fido2Mfa" method="post" id="register">
+                <h3 class="title is-3">Sign in</h3>
+                <form action="/LoginFido2Mfa" method="post" id="signin">
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" readonly placeholder="abergs" value="@User.Identity.Name" name="username" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Display name</label>
-                        <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" placeholder="not needed" name="displayName">
+                            <input class="form-control" type="text" placeholder="abergs" name="username" id="login-username" required>
                         </div>
                     </div>
 
@@ -46,15 +37,8 @@
                     </div>
 
                     <div class="field">
-                        <label class="checkbox">
-                            <input type="checkbox" disabled checked readonly>
-                            Register MFA on registration
-                        </label>
-                    </div>
-
-                    <div class="field">
                         <div class="control">
-                            <button class="btn btn-primary">Add Fido2 MFA</button>
+                            <button class="btn btn-primary">Sign in</button>
                         </div>
                     </div>
                 </form>
