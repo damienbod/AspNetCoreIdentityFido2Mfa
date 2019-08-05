@@ -78,7 +78,9 @@ async function handleRegisterSubmit(event) {
 
 
     console.log("Creating PublicKeyCredential...");
-
+    console.log(navigator);
+    console.log(navigator.credentials);
+    console.log(makeCredentialOptions);
     let newCredential;
     try {
         newCredential = await navigator.credentials.create({

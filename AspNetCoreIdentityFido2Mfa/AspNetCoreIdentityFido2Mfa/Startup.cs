@@ -34,7 +34,9 @@ namespace AspNetCoreIdentityFido2Mfa
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddControllers();
+            services.AddControllers()
+               .AddNewtonsoftJson();
+
             services.AddRazorPages();
 
             // Adds a default in-memory implementation of IDistributedCache.
