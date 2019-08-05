@@ -23,10 +23,11 @@ namespace AspNetCoreIdentityFido2Mfa
         private Fido2 _lib;
         public static IMetadataService _mds;
         private string _origin;
-        public static readonly DevelopmentInMemoryStore DemoStorage = new DevelopmentInMemoryStore();
+        private readonly Fido2Storage _fido2Storage;
 
-        public SignInFidoController(IConfiguration config)
+        public SignInFidoController(IConfiguration config, Fido2Storage fido2Storage)
         {
+            _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
             _mds = string.IsNullOrEmpty(MDSAccessKey) ? null : MDSMetadata.Instance(MDSAccessKey, MDSCacheDirPath);
@@ -63,11 +64,11 @@ namespace AspNetCoreIdentityFido2Mfa
                 if (!string.IsNullOrEmpty(username))
                 {
                     // 1. Get user from DB
-                    var user = DemoStorage.GetUser(username);
+                    var user = _fido2Storage.GetUser(username);
                     if (user == null) throw new ArgumentException("Username was not registered");
 
                     // 2. Get registered credentials from database
-                    existingCredentials = DemoStorage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+                    existingCredentials = _fido2Storage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
                 }
 
                 var exts = new AuthenticationExtensionsClientInputs() { SimpleTransactionAuthorization = "FIDO", GenericTransactionAuthorization = new TxAuthGenericArg { ContentType = "text/plain", Content = new byte[] { 0x46, 0x49, 0x44, 0x4F } }, UserVerificationIndex = true, Location = true, UserVerificationMethod = true };
@@ -104,7 +105,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 var options = AssertionOptions.FromJson(jsonOptions);
 
                 // 2. Get registered credential from database
-                var creds = DemoStorage.GetCredentialById(clientResponse.Id);
+                var creds = _fido2Storage.GetCredentialById(clientResponse.Id);
 
                 if(creds == null)
                 {
@@ -117,7 +118,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 // 4. Create callback to check if userhandle owns the credentialId
                 IsUserHandleOwnerOfCredentialIdAsync callback = async (args) =>
                 {
-                    var storedCreds = await DemoStorage.GetCredentialsByUserHandleAsync(args.UserHandle);
+                    var storedCreds = await _fido2Storage.GetCredentialsByUserHandleAsync(args.UserHandle);
                     return storedCreds.Exists(c => c.Descriptor.Id.SequenceEqual(args.CredentialId));
                 };
 
@@ -125,7 +126,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
 
                 // 6. Store the updated counter
-                DemoStorage.UpdateCounter(res.CredentialId, res.Counter);
+                _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
 
                 // 7. return OK to client
                 return Json(res);

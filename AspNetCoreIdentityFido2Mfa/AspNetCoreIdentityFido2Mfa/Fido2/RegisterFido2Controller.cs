@@ -23,10 +23,11 @@ namespace AspNetCoreIdentityFido2Mfa
         private Fido2 _lib;
         public static IMetadataService _mds;
         private string _origin;
-        public static readonly DevelopmentInMemoryStore DemoStorage = new DevelopmentInMemoryStore();
+        private readonly Fido2Storage _fido2Storage;
 
-        public RegisterFido2Controller(IConfiguration config)
+        public RegisterFido2Controller(IConfiguration config, Fido2Storage fido2Storage)
         {
+            _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
             _mds = string.IsNullOrEmpty(MDSAccessKey) ? null : MDSMetadata.Instance(MDSAccessKey, MDSCacheDirPath);
@@ -76,7 +77,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 }
 
                 // 1. Get user from DB by username (in our example, auto create missing users)
-                var user = DemoStorage.GetOrAddUser(username, () => new Fido2User
+                var user = _fido2Storage.GetOrAddUser(username, () => new Fido2User
                 {
                     DisplayName = displayName,
                     Name = username,
@@ -84,7 +85,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 });
 
                 // 2. Get user existing keys by username
-                var existingKeys = DemoStorage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+                var existingKeys = _fido2Storage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
 
                 // 3. Create options
                 var authenticatorSelection = new AuthenticatorSelection
@@ -125,7 +126,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 // 2. Create callback so that lib can verify credential id is unique to this user
                 IsCredentialIdUniqueToUserAsyncDelegate callback = async (IsCredentialIdUniqueToUserParams args) =>
                 {
-                    var users = await DemoStorage.GetUsersByCredentialIdAsync(args.CredentialId);
+                    var users = await _fido2Storage.GetUsersByCredentialIdAsync(args.CredentialId);
                     if (users.Count > 0) return false;
 
                     return true;
@@ -135,7 +136,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
                 // 3. Store the credentials in db
-                DemoStorage.AddCredentialToUser(options.User, new StoredCredential
+                _fido2Storage.AddCredentialToUser(options.User, new FidoStoredCredential
                 {
                     Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
                     PublicKey = success.Result.PublicKey,
