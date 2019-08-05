@@ -12,8 +12,6 @@ using Fido2NetLib.Development;
 using static Fido2NetLib.Fido2;
 using System.IO;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace AspNetCoreIdentityFido2Mfa
 {
 
