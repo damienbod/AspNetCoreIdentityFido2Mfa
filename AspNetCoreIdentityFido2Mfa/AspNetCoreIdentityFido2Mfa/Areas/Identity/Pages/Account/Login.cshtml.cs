@@ -21,12 +21,15 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly Fido2Storage _fido2Storage;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
             UserManager<IdentityUser> userManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            Fido2Storage fido2Storage)
         {
+            _fido2Storage = fido2Storage;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -90,12 +93,17 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUsername(Input.Email);
+                    if (fido2ItemExistsForUser.Count > 0)
+                    {
+                        return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    }
+                    else
+                    {
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    }
                 }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
+                
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
