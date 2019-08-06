@@ -1,5 +1,6 @@
-# ASP.NET Core Identity with Fido2 MFA
+# ASP.NET Core Identity with Fido2 WebAuthn MFA
 
+https://damienbod.com/2019/08/06/asp-net-core-identity-with-fido2-webauthn-mfa/
 
 ## Links
 
