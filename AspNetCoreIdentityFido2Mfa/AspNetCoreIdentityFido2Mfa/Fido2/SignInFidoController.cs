@@ -23,13 +23,18 @@ namespace AspNetCoreIdentityFido2Mfa
         private string _origin;
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public SignInFidoController(IConfiguration config, Fido2Storage fido2Storage, UserManager<IdentityUser> userManager)
+        public SignInFidoController(IConfiguration config,
+            Fido2Storage fido2Storage,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
+            _signInManager = signInManager;
             _userManager = userManager;
             _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
-            var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
+            var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache");
             _mds = string.IsNullOrEmpty(MDSAccessKey) ? null : MDSMetadata.Instance(MDSAccessKey, MDSCacheDirPath);
             if (null != _mds)
             {
@@ -114,7 +119,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 // 2. Get registered credential from database
                 var creds = await _fido2Storage.GetCredentialById(clientResponse.Id);
 
-                if(creds == null)
+                if (creds == null)
                 {
                     throw new Exception("Unknown credentials");
                 }
@@ -134,6 +139,15 @@ namespace AspNetCoreIdentityFido2Mfa
 
                 // 6. Store the updated counter
                 await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
+
+                // complete sign-in
+                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                if (user == null)
+                {
+                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                }
+                
+                var result = await _signInManager.TwoFactorSignInAsync("FIDO2", string.Empty, false, false);
 
                 // 7. return OK to client
                 return Json(res);

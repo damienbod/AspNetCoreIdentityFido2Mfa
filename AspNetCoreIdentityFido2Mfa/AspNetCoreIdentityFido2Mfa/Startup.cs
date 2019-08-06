@@ -32,7 +32,9 @@ namespace AspNetCoreIdentityFido2Mfa
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddTokenProvider<Fifo2UserTwoFactorTokenProvider>("FIDO2");
+
 
             services.AddControllers()
                .AddNewtonsoftJson();
