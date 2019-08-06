@@ -79,7 +79,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 }
 
                 var identityUser = await _userManager.FindByEmailAsync(username);
-                var user =  new Fido2User
+                var user = new Fido2User
                 {
                     DisplayName = identityUser.UserName,
                     Name = identityUser.UserName,
@@ -87,7 +87,12 @@ namespace AspNetCoreIdentityFido2Mfa
                 };
 
                 // 2. Get user existing keys by username
-                var existingKeys = _fido2Storage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+                var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
+                var existingKeys = new List<PublicKeyCredentialDescriptor>();
+                foreach(var publicKeyCredentialDescriptor in items)
+                {
+                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                }
 
                 // 3. Create options
                 var authenticatorSelection = new AuthenticatorSelection
@@ -138,8 +143,9 @@ namespace AspNetCoreIdentityFido2Mfa
                 var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
                 // 3. Store the credentials in db
-                _fido2Storage.AddCredentialToUser(options.User, new FidoStoredCredential
+                await _fido2Storage.AddCredentialToUser(options.User, new FidoStoredCredential
                 {
+                    Username = options.User.Name,
                     Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
                     PublicKey = success.Result.PublicKey,
                     UserHandle = success.Result.User.Id,

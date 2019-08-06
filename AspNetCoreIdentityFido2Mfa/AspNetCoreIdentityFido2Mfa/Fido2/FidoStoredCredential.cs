@@ -8,6 +8,7 @@ namespace AspNetCoreIdentityFido2Mfa
 {
     public class FidoStoredCredential
     {
+        public string Username { get; set; }
         public byte[] UserId { get; set; }
         public byte[] PublicKey { get; set; }
         public byte[] UserHandle { get; set; }
@@ -19,7 +20,7 @@ namespace AspNetCoreIdentityFido2Mfa
         [NotMapped]
         public PublicKeyCredentialDescriptor Descriptor
         {
-            get { return JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(DescriptorJson); }
+            get { return string.IsNullOrWhiteSpace(DescriptorJson) ? null : JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(DescriptorJson); }
             set { DescriptorJson = JsonConvert.SerializeObject(value); }
         }
         public string DescriptorJson { get; set; }

@@ -74,7 +74,8 @@ namespace AspNetCoreIdentityFido2Mfa
                     if (user == null) throw new ArgumentException("Username was not registered");
 
                     // 2. Get registered credentials from database
-                    existingCredentials = _fido2Storage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();
+                    var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
+                    existingCredentials = items.Select(c => c.Descriptor).ToList();
                 }
 
                 var exts = new AuthenticationExtensionsClientInputs() { SimpleTransactionAuthorization = "FIDO", GenericTransactionAuthorization = new TxAuthGenericArg { ContentType = "text/plain", Content = new byte[] { 0x46, 0x49, 0x44, 0x4F } }, UserVerificationIndex = true, Location = true, UserVerificationMethod = true };
@@ -111,7 +112,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 var options = AssertionOptions.FromJson(jsonOptions);
 
                 // 2. Get registered credential from database
-                var creds = _fido2Storage.GetCredentialById(clientResponse.Id);
+                var creds = await _fido2Storage.GetCredentialById(clientResponse.Id);
 
                 if(creds == null)
                 {
@@ -132,7 +133,7 @@ namespace AspNetCoreIdentityFido2Mfa
                 var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
 
                 // 6. Store the updated counter
-                _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
+                await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
 
                 // 7. return OK to client
                 return Json(res);

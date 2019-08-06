@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreIdentityFido2Mfa.Data
@@ -17,7 +14,7 @@ namespace AspNetCoreIdentityFido2Mfa.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<FidoStoredCredential>().HasKey(m => m.UserId);
+            builder.Entity<FidoStoredCredential>().HasKey(m => m.Username);
 
             base.OnModelCreating(builder);
         }

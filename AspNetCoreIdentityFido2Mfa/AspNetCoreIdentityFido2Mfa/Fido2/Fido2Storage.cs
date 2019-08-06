@@ -1,5 +1,6 @@
 ﻿using AspNetCoreIdentityFido2Mfa.Data;
 using Fido2NetLib;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,20 @@ namespace AspNetCoreIdentityFido2Mfa
             _applicationDbContext = applicationDbContext;
         }
 
-        public List<FidoStoredCredential> GetCredentialsByUser(Fido2User user)
+        public async Task<List<FidoStoredCredential>> GetCredentialsByUsername(string username)
         {
-            return _applicationDbContext.FidoStoredCredential.Where(c => c.UserId.SequenceEqual(user.Id)).ToList();
+            return await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).ToListAsync();
         }
 
-        public FidoStoredCredential GetCredentialById(byte[] id)
+        public async Task<FidoStoredCredential> GetCredentialById(byte[] id)
         {
-            return _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(id)).FirstOrDefault();
+            var credentialIdString = Base64Url.Encode(id);
+            //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
+
+            var cred = await _applicationDbContext.FidoStoredCredential
+                .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
+
+            return cred;
         }
 
         public Task<List<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
@@ -32,27 +39,39 @@ namespace AspNetCoreIdentityFido2Mfa
             return Task.FromResult(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
         }
 
-        public void UpdateCounter(byte[] credentialId, uint counter)
+        public async Task UpdateCounter(byte[] credentialId, uint counter)
         {
-            var cred = _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
+            var credentialIdString = Base64Url.Encode(credentialId);
+            //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
+
+            var cred = await _applicationDbContext.FidoStoredCredential
+                .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
+
             cred.SignatureCounter = counter;
+            await _applicationDbContext.SaveChangesAsync();
         }
 
-        public void AddCredentialToUser(Fido2User user, FidoStoredCredential credential)
+        public async Task AddCredentialToUser(Fido2User user, FidoStoredCredential credential)
         {
             credential.UserId = user.Id;
             _applicationDbContext.FidoStoredCredential.Add(credential);
+            await _applicationDbContext.SaveChangesAsync();
         }
 
-        public Task<List<Fido2User>> GetUsersByCredentialIdAsync(byte[] credentialId)
+        public async Task<List<Fido2User>> GetUsersByCredentialIdAsync(byte[] credentialId)
         {
-            // our in-mem storage does not allow storing multiple users for a given credentialId. Yours shouldn't either.
-            var cred = _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
+            var credentialIdString = Base64Url.Encode(credentialId);
+            //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
-            if (cred == null) return Task.FromResult(new List<Fido2User>());
+            var cred = await _applicationDbContext.FidoStoredCredential
+                .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
-            return Task.FromResult(
-                _applicationDbContext.Users
+            if (cred == null)
+            {
+                return new List<Fido2User>();
+            }
+
+            return await _applicationDbContext.Users
                     .Where(u => Encoding.UTF8.GetBytes(u.UserName)
                     .SequenceEqual(cred.UserId))
                     .Select(u => new Fido2User
@@ -60,8 +79,7 @@ namespace AspNetCoreIdentityFido2Mfa
                         DisplayName = u.UserName,
                         Name = u.UserName,
                         Id = Encoding.UTF8.GetBytes(u.UserName) // byte representation of userID is required
-                    }
-            ).ToList());
+                    }).ToListAsync();
         }
     }
 }
