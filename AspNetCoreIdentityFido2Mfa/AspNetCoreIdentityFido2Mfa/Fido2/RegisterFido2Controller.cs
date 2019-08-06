@@ -69,23 +69,22 @@ namespace AspNetCoreIdentityFido2Mfa
 
         [HttpPost]
         [Route("/makeCredentialOptions")]
-        public JsonResult MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
+        public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
             try
             {
-
                 if (string.IsNullOrEmpty(username))
                 {
                     username = $"{displayName} (Usernameless user created at {DateTime.UtcNow})";
                 }
 
-                // 1. Get user from DB by username (in our example, auto create missing users)
-                var user = _fido2Storage.GetOrAddUser(username, () => new Fido2User
+                var identityUser = await _userManager.FindByEmailAsync(username);
+                var user =  new Fido2User
                 {
-                    DisplayName = displayName,
-                    Name = username,
-                    Id = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
-                });
+                    DisplayName = identityUser.UserName,
+                    Name = identityUser.UserName,
+                    Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                };
 
                 // 2. Get user existing keys by username
                 var existingKeys = _fido2Storage.GetCredentialsByUser(user).Select(c => c.Descriptor).ToList();

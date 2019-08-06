@@ -1,32 +1,20 @@
 ﻿using AspNetCoreIdentityFido2Mfa.Data;
 using Fido2NetLib;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNetCoreIdentityFido2Mfa
 {
     public class Fido2Storage
     {
-        ConcurrentDictionary<string, Fido2User> storedUsers = new ConcurrentDictionary<string, Fido2User>();
-        private readonly ApplicationDbContext _applicationDbContext;
+       private readonly ApplicationDbContext _applicationDbContext;
 
         public Fido2Storage(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-        }
-
-        public Fido2User GetOrAddUser(string username, Func<Fido2User> addCallback)
-        {
-            return storedUsers.GetOrAdd(username, addCallback());
-        }
-
-        public Fido2User GetUser(string username)
-        {
-            storedUsers.TryGetValue(username, out var user);
-            return user;
         }
 
         public List<FidoStoredCredential> GetCredentialsByUser(Fido2User user)
@@ -63,7 +51,17 @@ namespace AspNetCoreIdentityFido2Mfa
 
             if (cred == null) return Task.FromResult(new List<Fido2User>());
 
-            return Task.FromResult(storedUsers.Where(u => u.Value.Id.SequenceEqual(cred.UserId)).Select(u => u.Value).ToList());
+            return Task.FromResult(
+                _applicationDbContext.Users
+                    .Where(u => Encoding.UTF8.GetBytes(u.UserName)
+                    .SequenceEqual(cred.UserId))
+                    .Select(u => new Fido2User
+                    {
+                        DisplayName = u.UserName,
+                        Name = u.UserName,
+                        Id = Encoding.UTF8.GetBytes(u.UserName) // byte representation of userID is required
+                    }
+            ).ToList());
         }
     }
 }

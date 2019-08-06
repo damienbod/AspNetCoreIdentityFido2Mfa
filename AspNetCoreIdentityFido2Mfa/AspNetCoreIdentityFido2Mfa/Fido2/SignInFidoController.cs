@@ -8,9 +8,9 @@ using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Fido2NetLib.Development;
 using static Fido2NetLib.Fido2;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreIdentityFido2Mfa
 {
@@ -22,9 +22,11 @@ namespace AspNetCoreIdentityFido2Mfa
         public static IMetadataService _mds;
         private string _origin;
         private readonly Fido2Storage _fido2Storage;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public SignInFidoController(IConfiguration config, Fido2Storage fido2Storage)
+        public SignInFidoController(IConfiguration config, Fido2Storage fido2Storage, UserManager<IdentityUser> userManager)
         {
+            _userManager = userManager;
             _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
@@ -53,7 +55,7 @@ namespace AspNetCoreIdentityFido2Mfa
 
         [HttpPost]
         [Route("/assertionOptions")]
-        public ActionResult AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
+        public async Task<ActionResult> AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
         {
             try
             {
@@ -61,8 +63,14 @@ namespace AspNetCoreIdentityFido2Mfa
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    // 1. Get user from DB
-                    var user = _fido2Storage.GetUser(username);
+                    var identityUser = await _userManager.FindByEmailAsync(username);
+                    var user = new Fido2User
+                    {
+                        DisplayName = identityUser.UserName,
+                        Name = identityUser.UserName,
+                        Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                    };
+
                     if (user == null) throw new ArgumentException("Username was not registered");
 
                     // 2. Get registered credentials from database

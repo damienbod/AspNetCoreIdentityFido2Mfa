@@ -39,7 +39,7 @@ namespace AspNetCoreIdentityFido2Mfa
 
             services.AddRazorPages();
 
-            services.AddSingleton<Fido2Storage>();
+            services.AddScoped<Fido2Storage>();
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
