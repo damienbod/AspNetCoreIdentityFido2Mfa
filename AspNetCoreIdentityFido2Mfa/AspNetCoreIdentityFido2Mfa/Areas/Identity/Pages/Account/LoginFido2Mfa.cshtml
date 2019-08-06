@@ -1,4 +1,5 @@
-﻿@page 
+﻿@page
+
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
@@ -19,24 +20,17 @@
         <div class="columns">
             <div class="column is-4">
 
-                <h3 class="title is-3">Sign in</h3>
+                <h3 class="title is-3">Fido2 2FA</h3>
                 <form action="/LoginFido2Mfa" method="post" id="signin">
-                    @*<div class="field">
-                        <label class="label">Username</label>
-                        <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" placeholder="abergs" name="username" id="login-username" required>
-                        </div>
-                    </div>*@
 
                     <div class="field">
                         <div class="control">
-                            <button class="btn btn-primary">Sign in</button>
+                            <button class="btn btn-primary">2FA with Fido2 device</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-
 
     </div>
 </div>
