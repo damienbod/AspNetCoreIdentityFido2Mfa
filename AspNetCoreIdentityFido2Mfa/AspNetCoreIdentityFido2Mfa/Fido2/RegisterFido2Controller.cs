@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fido2NetLib.Objects;
@@ -8,7 +7,6 @@ using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Fido2NetLib.Development;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
