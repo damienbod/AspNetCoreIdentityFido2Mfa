@@ -41,9 +41,6 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
                 throw new InvalidOperationException($"Cannot disable 2FA for user with ID '{_userManager.GetUserId(User)}' as it's not currently enabled.");
             }
 
-            // remove Fido2 MFA if it exists
-            await _fido2Storage.RemoveCredentialsByUsername(user.UserName);
-
             return Page();
         }
 
@@ -54,6 +51,9 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            // remove Fido2 MFA if it exists
+            await _fido2Storage.RemoveCredentialsByUsername(user.UserName);
 
             var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
