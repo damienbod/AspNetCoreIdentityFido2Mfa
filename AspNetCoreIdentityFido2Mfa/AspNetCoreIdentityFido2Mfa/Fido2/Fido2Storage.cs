@@ -1,4 +1,5 @@
-﻿using Fido2NetLib;
+﻿using AspNetCoreIdentityFido2Mfa.Data;
+using Fido2NetLib;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace AspNetCoreIdentityFido2Mfa
     public class Fido2Storage
     {
         ConcurrentDictionary<string, Fido2User> storedUsers = new ConcurrentDictionary<string, Fido2User>();
+        private readonly ApplicationDbContext _applicationDbContext;
+
+        public Fido2Storage(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
+        }
 
         public Fido2User GetOrAddUser(string username, Func<Fido2User> addCallback)
         {
@@ -22,40 +29,37 @@ namespace AspNetCoreIdentityFido2Mfa
             return user;
         }
 
-
-        List<FidoStoredCredential> storedCredentials = new List<FidoStoredCredential>();
-
         public List<FidoStoredCredential> GetCredentialsByUser(Fido2User user)
         {
-            return storedCredentials.Where(c => c.UserId.SequenceEqual(user.Id)).ToList();
+            return _applicationDbContext.FidoStoredCredential.Where(c => c.UserId.SequenceEqual(user.Id)).ToList();
         }
 
         public FidoStoredCredential GetCredentialById(byte[] id)
         {
-            return storedCredentials.Where(c => c.Descriptor.Id.SequenceEqual(id)).FirstOrDefault();
+            return _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(id)).FirstOrDefault();
         }
 
         public Task<List<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
         {
-            return Task.FromResult(storedCredentials.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
+            return Task.FromResult(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
         }
 
         public void UpdateCounter(byte[] credentialId, uint counter)
         {
-            var cred = storedCredentials.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
+            var cred = _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
             cred.SignatureCounter = counter;
         }
 
         public void AddCredentialToUser(Fido2User user, FidoStoredCredential credential)
         {
             credential.UserId = user.Id;
-            storedCredentials.Add(credential);
+            _applicationDbContext.FidoStoredCredential.Add(credential);
         }
 
         public Task<List<Fido2User>> GetUsersByCredentialIdAsync(byte[] credentialId)
         {
             // our in-mem storage does not allow storing multiple users for a given credentialId. Yours shouldn't either.
-            var cred = storedCredentials.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
+            var cred = _applicationDbContext.FidoStoredCredential.Where(c => c.Descriptor.Id.SequenceEqual(credentialId)).FirstOrDefault();
 
             if (cred == null) return Task.FromResult(new List<Fido2User>());
 
