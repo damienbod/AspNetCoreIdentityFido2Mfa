@@ -23,6 +23,16 @@ namespace AspNetCoreIdentityFido2Mfa
             return await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).ToListAsync();
         }
 
+        public async Task RemoveCredentialsByUsername(string username)
+        {
+            var item = await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).FirstOrDefaultAsync();
+            if(item != null)
+            {
+                _applicationDbContext.FidoStoredCredential.Remove(item);
+                await _applicationDbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<FidoStoredCredential> GetCredentialById(byte[] id)
         {
             var credentialIdString = Base64Url.Encode(id);

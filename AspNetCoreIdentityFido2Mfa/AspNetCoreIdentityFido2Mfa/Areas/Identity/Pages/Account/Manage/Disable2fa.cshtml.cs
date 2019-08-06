@@ -12,13 +12,16 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
     public class Disable2faModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Fido2Storage _fido2Storage;
         private readonly ILogger<Disable2faModel> _logger;
 
         public Disable2faModel(
             UserManager<IdentityUser> userManager,
-            ILogger<Disable2faModel> logger)
+            ILogger<Disable2faModel> logger,
+            Fido2Storage fido2Storage)
         {
             _userManager = userManager;
+            _fido2Storage = fido2Storage;
             _logger = logger;
         }
 
@@ -37,6 +40,9 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
             {
                 throw new InvalidOperationException($"Cannot disable 2FA for user with ID '{_userManager.GetUserId(User)}' as it's not currently enabled.");
             }
+
+            // remove Fido2 MFA if it exists
+            await _fido2Storage.RemoveCredentialsByUsername(user.UserName);
 
             return Page();
         }
