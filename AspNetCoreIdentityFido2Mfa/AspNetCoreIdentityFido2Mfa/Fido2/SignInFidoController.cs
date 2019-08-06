@@ -64,11 +64,17 @@ namespace AspNetCoreIdentityFido2Mfa
         {
             try
             {
+                var identityUser = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                if (identityUser == null)
+                {
+                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                }
+
                 var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
-                if (!string.IsNullOrEmpty(username))
+                if (!string.IsNullOrEmpty(identityUser.UserName))
                 {
-                    var identityUser = await _userManager.FindByEmailAsync(username);
+                    
                     var user = new Fido2User
                     {
                         DisplayName = identityUser.UserName,

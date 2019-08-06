@@ -16,7 +16,6 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
 
         public void OnPost()
         {
-            string tt = "";
         }
     }
 }
