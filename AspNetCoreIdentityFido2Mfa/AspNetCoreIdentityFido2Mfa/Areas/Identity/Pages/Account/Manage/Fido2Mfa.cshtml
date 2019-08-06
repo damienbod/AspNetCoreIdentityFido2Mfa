@@ -26,33 +26,11 @@
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" readonly placeholder="abergs" value="@User.Identity.Name" name="username" required>
+                            <input class="form-control" type="text" readonly placeholder="email" value="@User.Identity.Name" name="username" required>
                         </div>
                     </div>
 
-                    <div class="field">
-                        <label class="label">Display name</label>
-                        <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" placeholder="not needed" name="displayName">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Password</label>
-                        <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="password" placeholder="Do not use something secret" name="password">
-                        </div>
-                        <p class="help">For demo purposes the password will not be used or stored</p>
-                    </div>
-
-                    <div class="field">
-                        <label class="checkbox">
-                            <input type="checkbox" disabled checked readonly>
-                            Register MFA on registration
-                        </label>
-                    </div>
-
-                    <div class="field">
+                    <div class="field" style="margin-top:10px;">
                         <div class="control">
                             <button class="btn btn-primary">Add Fido2 MFA</button>
                         </div>
@@ -68,4 +46,3 @@
 <script src="~/js/helpers.js"></script>
 <script src="~/js/instant.js"></script>
 <script src="~/js/mfa.register.js"></script>
-<script src="~/js/mfa.login.js"></script>

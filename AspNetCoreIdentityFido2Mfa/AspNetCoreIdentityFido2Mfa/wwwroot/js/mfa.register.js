@@ -4,7 +4,7 @@ async function handleRegisterSubmit(event) {
     event.preventDefault();
 
     let username = this.username.value;
-    let displayName = this.displayName.value;
+    //let displayName = this.displayName.value;
 
     // passwordfield is omitted in demo
     // let password = this.password.value;
@@ -25,7 +25,7 @@ async function handleRegisterSubmit(event) {
     // prepare form post data
     var data = new FormData();
     data.append('username', username);
-    data.append('displayName', displayName);
+   // data.append('displayName', displayName);
     data.append('attType', attestation_type);
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
