@@ -4,6 +4,8 @@ https://damienbod.com/2019/08/06/asp-net-core-identity-with-fido2-webauthn-mfa/
 
 ## History
 
+2019-09-06 Updated to .NET Core preview 9
+
 2019-08-13 Updated to .NET Core preview 8
 
 ## Links
