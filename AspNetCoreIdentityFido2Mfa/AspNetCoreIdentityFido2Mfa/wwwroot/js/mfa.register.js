@@ -161,8 +161,7 @@ async function registerNewCredential(newCredential) {
         timer: 2000
     });
 
-    // redirect to dashboard?
-    //window.location.href = "/dashboard/" + state.user.displayName;
+    window.location.href = "/Identity/Account/Manage/GenerateRecoveryCodes";
 }
 
 async function registerCredentialWithServer(formData) {
