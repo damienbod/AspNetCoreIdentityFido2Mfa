@@ -1,5 +1,5 @@
-/AspNetCoreIdentityFido2Mfa/AspNetCoreIdentityFido2Mfa/obj
-/AspNetCoreIdentityFido2Mfa/.vs
-/AspNetCoreIdentityFido2Mfa/AspNetCoreIdentityFido2Mfa/bin
-/AspNetCoreIdentityFido2Mfa/AspNetCoreIdentityFido2Mfa/AspNetCoreIdentityFido2Mfa.csproj.user
-/AspNetCoreIdentityFido2Mfa/AspNetCoreIdentityFido2Mfa/ScaffoldingReadme.txt
+/**/obj
+/.vs
+/**/bin
+/**/*.csproj.user
+/**/ScaffoldingReadme.txt
