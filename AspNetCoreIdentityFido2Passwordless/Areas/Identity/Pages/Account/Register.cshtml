@@ -10,29 +10,19 @@
 
         <h3 class="title is-3">Register user</h3>
         <form action="/mfa" method="post" id="register">
-            <div class="field">
-                <label class="label">Username</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" placeholder="abergs" name="username" required>
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-user"></i>
-                    </span>
-                </div>
+            <div class="form-group">
+                <label name="username">Email</label>
+                <input name="username" class="form-control" />
             </div>
 
-            <div class="field">
-                <label class="label">Display name</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="text" placeholder="Anders Åberg" name="displayName">
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-user"></i>
-                    </span>
-                </div>
+            <div class="form-group">
+                <label name="displayName">Display name</label>
+                <input name="displayName" class="form-control" />
             </div>
 
             <div class="field">
                 <div class="control">
-                    <button class="button is-link">Register user</button>
+                    <button class="btn btn-primary">Register user</button>
                 </div>
             </div>
         </form>
