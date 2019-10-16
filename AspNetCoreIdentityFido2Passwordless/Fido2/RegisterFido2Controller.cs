@@ -46,7 +46,7 @@ namespace AspNetCoreIdentityFido2Passwordless
             _origin = config["fido2:origin"];
             if(_origin == null)
             {
-                _origin = "https://localhost:44388";
+                _origin = "https://localhost:44326";
             }
 
             var domain = config["fido2:serverDomain"];
@@ -58,7 +58,7 @@ namespace AspNetCoreIdentityFido2Passwordless
             _lib = new Fido2(new Fido2Configuration()
             {
                 ServerDomain = domain,
-                ServerName = "Fido2IdentityMfa",
+                ServerName = "Fido2IdentityPassword",
                 Origin = _origin,
                 // Only create and use Metadataservice if we have an acesskey
                 MetadataService = _mds,
