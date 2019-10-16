@@ -12,5 +12,14 @@ namespace AspNetCoreIdentityFido2Passwordless.Data
             : base(options)
         {
         }
+
+        public DbSet<FidoStoredCredential> FidoStoredCredential { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<FidoStoredCredential>().HasKey(m => m.Username);
+
+            base.OnModelCreating(builder);
+        }
     }
 }

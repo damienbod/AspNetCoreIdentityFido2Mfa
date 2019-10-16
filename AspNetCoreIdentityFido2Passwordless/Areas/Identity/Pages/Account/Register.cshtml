@@ -1,0 +1,45 @@
+﻿@page
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+
+        <h3 class="title is-3">Register user</h3>
+        <form action="/mfa" method="post" id="register">
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" placeholder="abergs" name="username" required>
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Display name</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" placeholder="Anders Åberg" name="displayName">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <button class="button is-link">Register user</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/helpers.js"></script>
+<script src="~/js/instant.js"></script>
+<script src="~/js/passwordless.register.js"></script>
+@*<script src="~/js/passwordless.login.js"></script>*@
