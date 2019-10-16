@@ -169,7 +169,7 @@ namespace AspNetCoreIdentityFido2Passwordless
                 }
 
                 //await _userManager.SetTwoFactorEnabledAsync(user, true);
-                var userId = await _userManager.GetUserIdAsync(user);
+                //var userId = await _userManager.FindByNameAsync(user);
 
                 return Json(success);
             }
@@ -185,7 +185,7 @@ namespace AspNetCoreIdentityFido2Passwordless
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                //await _signInManager.SignInAsync(user, isPersistent: false);
             }
 
             return user;

@@ -45,7 +45,7 @@ namespace AspNetCoreIdentityFido2Passwordless
             _lib = new Fido2(new Fido2Configuration()
             {
                 ServerDomain = config["fido2:serverDomain"],
-                ServerName = "Fido2 test",
+                ServerName = "Fido2IdentityPassword",
                 Origin = _origin,
                 // Only create and use Metadataservice if we have an acesskey
                 MetadataService = _mds,
@@ -64,17 +64,12 @@ namespace AspNetCoreIdentityFido2Passwordless
         {
             try
             {
-                var identityUser = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-                if (identityUser == null)
-                {
-                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-                }
 
                 var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
-                if (!string.IsNullOrEmpty(identityUser.UserName))
+                if (!string.IsNullOrEmpty(username))
                 {
-                    
+                    var identityUser = await _userManager.FindByNameAsync(username);
                     var user = new Fido2User
                     {
                         DisplayName = identityUser.UserName,
@@ -146,14 +141,13 @@ namespace AspNetCoreIdentityFido2Passwordless
                 // 6. Store the updated counter
                 await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
 
-                // complete sign-in
-                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-                if (user == null)
+                var identityUser = await _userManager.FindByNameAsync(creds.Username);
+                if (identityUser == null)
                 {
-                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                    throw new InvalidOperationException($"Unable to load user.");
                 }
                 
-                var result = await _signInManager.TwoFactorSignInAsync("FIDO2", string.Empty, false, false);
+                await _signInManager.SignInAsync(identityUser, isPersistent: false);
 
                 // 7. return OK to client
                 return Json(res);
@@ -165,3 +159,6 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
     }
 }
+
+
+//
