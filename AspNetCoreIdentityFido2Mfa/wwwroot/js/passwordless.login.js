@@ -3,23 +3,16 @@
 async function handleSignInSubmit(event) {
     event.preventDefault();
 
-    //let username = this.username.value;
-
-    // passwordfield is omitted in demo
-    // let password = this.password.value;
-
+    let username = this.username.value;
 
     // prepare form post data
     var formData = new FormData();
-    //formData.append('username', username);
-
-    // not done in demo
-    // todo: validate username + password with server (has nothing to do with FIDO2/WebAuthn)
+    formData.append('username', username);
 
     // send to server for registering
     let makeAssertionOptions;
     try {
-        var res = await fetch('/mfaassertionOptions', {
+        var res = await fetch('/pwassertionOptions', {
             method: 'POST', // or 'PUT'
             body: formData, // data can be `string` or {object}!
             headers: {
@@ -79,10 +72,6 @@ async function handleSignInSubmit(event) {
     }
 }
 
-/**
- * Sends the credential to the the FIDO2 server for assertion
- * @param {any} assertedCredential
- */
 async function verifyAssertionWithServer(assertedCredential) {
 
     // Move data into Arrays incase it is super long
@@ -104,7 +93,7 @@ async function verifyAssertionWithServer(assertedCredential) {
 
     let response;
     try {
-        let res = await fetch("/makeAssertion", {
+        let res = await fetch("/pwmakeAssertion", {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers: {
@@ -137,5 +126,5 @@ async function verifyAssertionWithServer(assertedCredential) {
         timer: 2000
     });
 
-    window.location.href = "/";
+    window.location.href = "/index";
 }

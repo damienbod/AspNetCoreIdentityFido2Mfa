@@ -6,7 +6,6 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +13,11 @@ using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace AspNetCoreIdentityFido2Mfa
+namespace Fido2Identity
 {
 
     [Route("api/[controller]")]
-    public class RegisterFido2Controller : Controller
+    public class MfaFido2RegisterController : Controller
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
@@ -28,7 +27,7 @@ namespace AspNetCoreIdentityFido2Mfa
         private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
         
 
-        public RegisterFido2Controller(
+        public MfaFido2RegisterController(
             Fido2Storage fido2Storage, 
             UserManager<IdentityUser> userManager,
             IOptions<Fido2Configuration> optionsFido2Configuration,
@@ -65,7 +64,7 @@ namespace AspNetCoreIdentityFido2Mfa
         }
 
         [HttpPost]
-        [Route("/makeCredentialOptions")]
+        [Route("/mfamakeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
             try
@@ -118,7 +117,7 @@ namespace AspNetCoreIdentityFido2Mfa
         }
 
         [HttpPost]
-        [Route("/makeCredential")]
+        [Route("/mfamakeCredential")]
         public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
         {
             try

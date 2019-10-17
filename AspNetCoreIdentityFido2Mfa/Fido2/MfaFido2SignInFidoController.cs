@@ -7,17 +7,15 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCoreIdentityFido2Mfa
+namespace Fido2Identity
 {
 
     [Route("api/[controller]")]
-    public class SignInFidoController : Controller
+    public class MfaFido2SignInFidoController : Controller
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
@@ -27,7 +25,7 @@ namespace AspNetCoreIdentityFido2Mfa
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
         private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
 
-        public SignInFidoController(
+        public MfaFido2SignInFidoController(
             Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -68,7 +66,7 @@ namespace AspNetCoreIdentityFido2Mfa
         }
 
         [HttpPost]
-        [Route("/assertionOptions")]
+        [Route("/mfaassertionOptions")]
         public async Task<ActionResult> AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
         {
             try
@@ -122,7 +120,7 @@ namespace AspNetCoreIdentityFido2Mfa
         }
 
         [HttpPost]
-        [Route("/makeAssertion")]
+        [Route("/mfamakeAssertion")]
         public async Task<JsonResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse clientResponse)
         {
             try

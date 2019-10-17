@@ -4,10 +4,7 @@ async function handleRegisterSubmit(event) {
     event.preventDefault();
 
     let username = this.username.value;
-    //let displayName = this.displayName.value;
-
-    // passwordfield is omitted in demo
-    // let password = this.password.value;
+    let displayName = this.displayName.value;
 
     // possible values: none, direct, indirect
     let attestation_type = "none";
@@ -25,7 +22,7 @@ async function handleRegisterSubmit(event) {
     // prepare form post data
     var data = new FormData();
     data.append('username', username);
-   // data.append('displayName', displayName);
+    data.append('displayName', displayName);
     data.append('attType', attestation_type);
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
@@ -78,16 +75,14 @@ async function handleRegisterSubmit(event) {
 
 
     console.log("Creating PublicKeyCredential...");
-    console.log(navigator);
-    console.log(navigator.credentials);
-    console.log(makeCredentialOptions);
+
     let newCredential;
     try {
         newCredential = await navigator.credentials.create({
             publicKey: makeCredentialOptions
         });
     } catch (e) {
-        var msg = "Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenaticator.";
+        var msg = "Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator."
         console.error(msg, e);
         showErrorAlert(msg, e);
     }
@@ -104,7 +99,7 @@ async function handleRegisterSubmit(event) {
 }
 
 async function fetchMakeCredentialOptions(formData) {
-    let response = await fetch('/mfamakeCredentialOptions', {
+    let response = await fetch('/pwmakeCredentialOptions', {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
@@ -161,11 +156,12 @@ async function registerNewCredential(newCredential) {
         timer: 2000
     });
 
-    window.location.href = "/Identity/Account/Manage/GenerateRecoveryCodes";
+    // redirect to dashboard?
+    //window.location.href = "/dashboard/" + state.user.displayName;
 }
 
 async function registerCredentialWithServer(formData) {
-    let response = await fetch('/mfamakeCredential', {
+    let response = await fetch('/pwmakeCredential', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {

@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityFido2Mfa.Data;
+﻿using AspNetCoreIdentityFido2Passwordless.Data;
 using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AspNetCoreIdentityFido2Mfa
+namespace Fido2Identity
 {
     public class Fido2Storage
     {
