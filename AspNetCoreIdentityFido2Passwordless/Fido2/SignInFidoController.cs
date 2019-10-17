@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCoreIdentityFido2Passwordless
 {
@@ -20,17 +21,19 @@ namespace AspNetCoreIdentityFido2Passwordless
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
-        private string _origin;
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
 
         public SignInFidoController(IConfiguration config,
             Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IOptions<Fido2Configuration> optionsFido2Configuration)
         {
             _signInManager = signInManager;
+            _optionsFido2Configuration = optionsFido2Configuration;
             _userManager = userManager;
             _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
@@ -41,15 +44,15 @@ namespace AspNetCoreIdentityFido2Passwordless
                 if (false == _mds.IsInitialized())
                     _mds.Initialize().Wait();
             }
-            _origin = config["fido2:origin"];
+
             _lib = new Fido2(new Fido2Configuration()
             {
-                ServerDomain = config["fido2:serverDomain"],
-                ServerName = "Fido2IdentityPassword",
-                Origin = _origin,
+                ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
+                ServerName = _optionsFido2Configuration.Value.ServerName,
+                Origin = _optionsFido2Configuration.Value.Origin,
                 // Only create and use Metadataservice if we have an acesskey
                 MetadataService = _mds,
-                TimestampDriftTolerance = config.GetValue<int>("fido2:TimestampDriftTolerance")
+                TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
             });
         }
 

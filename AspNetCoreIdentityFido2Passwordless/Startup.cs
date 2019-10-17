@@ -12,6 +12,7 @@ using AspNetCoreIdentityFido2Passwordless.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Fido2NetLib;
 
 namespace AspNetCoreIdentityFido2Passwordless
 {
@@ -38,6 +39,16 @@ namespace AspNetCoreIdentityFido2Passwordless
 
             services.AddRazorPages();
 
+            // set directly
+            new Fido2Configuration()
+            {
+                ServerDomain = "localhost",
+                ServerName = "Fido2IdentityPassword",
+                Origin = "https://localhost:44388"
+            };
+            services.Configure<Fido2Configuration>(Configuration.GetSection("fido2"));
+            // or read from configuration
+            //services.Configure<Fido2Configuration>(Configuration.GetSection("fido2"));
             services.AddScoped<Fido2Storage>();
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();

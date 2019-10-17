@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,19 +22,18 @@ namespace AspNetCoreIdentityFido2Passwordless
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
-        private string _origin;
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
 
         public RegisterFido2Controller(
             IConfiguration config, 
             Fido2Storage fido2Storage, 
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            IOptions<Fido2Configuration> optionsFido2Configuration)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
+            _optionsFido2Configuration = optionsFido2Configuration;
             _fido2Storage = fido2Storage;
             var MDSAccessKey = config["fido2:MDSAccessKey"];
             var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
@@ -43,26 +43,15 @@ namespace AspNetCoreIdentityFido2Passwordless
                 if (false == _mds.IsInitialized())
                     _mds.Initialize().Wait();
             }
-            _origin = config["fido2:origin"];
-            if(_origin == null)
-            {
-                _origin = "https://localhost:44326";
-            }
-
-            var domain = config["fido2:serverDomain"];
-            if (domain == null)
-            {
-                domain = "localhost";
-            }
 
             _lib = new Fido2(new Fido2Configuration()
             {
-                ServerDomain = domain,
-                ServerName = "Fido2IdentityPassword",
-                Origin = _origin,
+                ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
+                ServerName = _optionsFido2Configuration.Value.ServerName,
+                Origin = _optionsFido2Configuration.Value.Origin,
                 // Only create and use Metadataservice if we have an acesskey
                 MetadataService = _mds,
-                TimestampDriftTolerance = config.GetValue<int>("fido2:TimestampDriftTolerance")
+                TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
             });
         }
 
