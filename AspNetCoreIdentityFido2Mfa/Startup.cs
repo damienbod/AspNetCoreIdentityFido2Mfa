@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Fido2NetLib;
+using Fido2Identity;
 
 namespace AspNetCoreIdentityFido2Mfa
 {
