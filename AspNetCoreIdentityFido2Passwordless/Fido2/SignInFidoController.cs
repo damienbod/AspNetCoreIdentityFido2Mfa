@@ -25,20 +25,26 @@ namespace AspNetCoreIdentityFido2Passwordless
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
+        private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
 
-        public SignInFidoController(IConfiguration config,
+        public SignInFidoController(
             Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IOptions<Fido2Configuration> optionsFido2Configuration)
+            IOptions<Fido2Configuration> optionsFido2Configuration,
+            IOptions<Fido2MdsConfiguration> optionsFido2MdsConfiguration)
         {
-            _signInManager = signInManager;
+            _userManager = userManager;
             _optionsFido2Configuration = optionsFido2Configuration;
+            _optionsFido2MdsConfiguration = optionsFido2MdsConfiguration;
+            _signInManager = signInManager;
             _userManager = userManager;
             _fido2Storage = fido2Storage;
-            var MDSAccessKey = config["fido2:MDSAccessKey"];
-            var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache");
-            _mds = string.IsNullOrEmpty(MDSAccessKey) ? null : MDSMetadata.Instance(MDSAccessKey, MDSCacheDirPath);
+
+            var MDSCacheDirPath = _optionsFido2MdsConfiguration.Value.MDSCacheDirPath ?? Path.Combine(Path.GetTempPath(), "fido2mdscache");
+            _mds = string.IsNullOrEmpty(_optionsFido2MdsConfiguration.Value.MDSAccessKey) ? null : MDSMetadata.Instance(
+                _optionsFido2MdsConfiguration.Value.MDSAccessKey, MDSCacheDirPath); 
+            
             if (null != _mds)
             {
                 if (false == _mds.IsInitialized())
