@@ -1,5 +1,6 @@
 ﻿document.getElementById('register').addEventListener('submit', handleRegisterSubmit);
 
+
 async function handleRegisterSubmit(event) {
     event.preventDefault();
 
@@ -19,8 +20,6 @@ async function handleRegisterSubmit(event) {
 
     // possible values: true,false
     let require_resident_key = false;
-
-
 
     // prepare form post data
     var data = new FormData();
@@ -116,7 +115,6 @@ async function fetchMakeCredentialOptions(formData) {
 
     return data;
 }
-
 
 // This should be used to verify the auth data with the server
 async function registerNewCredential(newCredential) {
