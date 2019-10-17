@@ -48,7 +48,15 @@ namespace AspNetCoreIdentityFido2Passwordless
                     _mds.Initialize().Wait();
             }
 
-            _lib = new Fido2(_optionsFido2Configuration.Value);
+            _lib = new Fido2(new Fido2Configuration()
+            {
+                ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
+                ServerName = _optionsFido2Configuration.Value.ServerName,
+                Origin = _optionsFido2Configuration.Value.Origin,
+                // Only create and use Metadataservice if we have an acesskey
+                MetadataService = _mds,
+                TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
+            });
         }
 
         private string FormatException(Exception e)
