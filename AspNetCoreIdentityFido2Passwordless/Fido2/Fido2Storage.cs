@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AspNetCoreIdentityFido2Passwordless
+namespace Fido2Identity
 {
     public class Fido2Storage
     {

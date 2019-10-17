@@ -6,7 +6,6 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +13,11 @@ using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace AspNetCoreIdentityFido2Passwordless
+namespace Fido2Identity
 {
 
     [Route("api/[controller]")]
-    public class RegisterFido2Controller : Controller
+    public class MfaFido2RegisterController : Controller
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
@@ -28,7 +27,7 @@ namespace AspNetCoreIdentityFido2Passwordless
         private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
         
 
-        public RegisterFido2Controller(
+        public MfaFido2RegisterController(
             Fido2Storage fido2Storage, 
             UserManager<IdentityUser> userManager,
             IOptions<Fido2Configuration> optionsFido2Configuration,
@@ -65,7 +64,7 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
 
         [HttpPost]
-        [Route("/makeCredentialOptions")]
+        [Route("/mfamakeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
             try
@@ -75,15 +74,16 @@ namespace AspNetCoreIdentityFido2Passwordless
                     username = $"{displayName} (Usernameless user created at {DateTime.UtcNow})";
                 }
 
+                var identityUser = await _userManager.FindByEmailAsync(username);
                 var user = new Fido2User
                 {
-                    DisplayName = displayName,
-                    Name = username,
-                    Id = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
+                    DisplayName = identityUser.UserName,
+                    Name = identityUser.UserName,
+                    Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
                 };
 
                 // 2. Get user existing keys by username
-                var items = await _fido2Storage.GetCredentialsByUsername(username);
+                var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
                 var existingKeys = new List<PublicKeyCredentialDescriptor>();
                 foreach(var publicKeyCredentialDescriptor in items)
                 {
@@ -117,7 +117,7 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
 
         [HttpPost]
-        [Route("/makeCredential")]
+        [Route("/mfamakeCredential")]
         public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
         {
             try
@@ -153,16 +153,14 @@ namespace AspNetCoreIdentityFido2Passwordless
 
                 // 4. return "ok" to the client
 
-                var user = await CreateUser(options.User.Name);
-                // await _userManager.GetUserAsync(User);
-
+                var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
                     return Json(new CredentialMakeResult { Status = "error", ErrorMessage = $"Unable to load user with ID '{_userManager.GetUserId(User)}'." });
                 }
 
-                //await _userManager.SetTwoFactorEnabledAsync(user, true);
-                //var userId = await _userManager.FindByNameAsync(user);
+                await _userManager.SetTwoFactorEnabledAsync(user, true);
+                var userId = await _userManager.GetUserIdAsync(user);
 
                 return Json(success);
             }
@@ -170,18 +168,6 @@ namespace AspNetCoreIdentityFido2Passwordless
             {
                 return Json(new CredentialMakeResult { Status = "error", ErrorMessage = FormatException(e) });
             }
-        }
-
-        private async Task<IdentityUser> CreateUser(string userEmail)
-        {
-            var user = new IdentityUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true };
-            var result = await _userManager.CreateAsync(user);
-            if (result.Succeeded)
-            {
-                //await _signInManager.SignInAsync(user, isPersistent: false);
-            }
-
-            return user;
         }
     }
 }

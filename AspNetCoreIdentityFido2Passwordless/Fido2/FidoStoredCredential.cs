@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AspNetCoreIdentityFido2Passwordless
+namespace Fido2Identity
 {
     public class FidoStoredCredential
     {

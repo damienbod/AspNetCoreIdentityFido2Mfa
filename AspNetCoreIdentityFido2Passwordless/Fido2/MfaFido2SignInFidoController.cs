@@ -7,17 +7,15 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace AspNetCoreIdentityFido2Passwordless
+namespace Fido2Identity
 {
 
     [Route("api/[controller]")]
-    public class SignInFidoController : Controller
+    public class MfaFido2SignInFidoController : Controller
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
@@ -27,7 +25,7 @@ namespace AspNetCoreIdentityFido2Passwordless
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
         private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
 
-        public SignInFidoController(
+        public MfaFido2SignInFidoController(
             Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -68,17 +66,22 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
 
         [HttpPost]
-        [Route("/assertionOptions")]
+        [Route("/mfaassertionOptions")]
         public async Task<ActionResult> AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
         {
             try
             {
+                var identityUser = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                if (identityUser == null)
+                {
+                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                }
 
                 var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
-                if (!string.IsNullOrEmpty(username))
+                if (!string.IsNullOrEmpty(identityUser.UserName))
                 {
-                    var identityUser = await _userManager.FindByNameAsync(username);
+                    
                     var user = new Fido2User
                     {
                         DisplayName = identityUser.UserName,
@@ -117,7 +120,7 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
 
         [HttpPost]
-        [Route("/makeAssertion")]
+        [Route("/mfamakeAssertion")]
         public async Task<JsonResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse clientResponse)
         {
             try
@@ -150,13 +153,14 @@ namespace AspNetCoreIdentityFido2Passwordless
                 // 6. Store the updated counter
                 await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
 
-                var identityUser = await _userManager.FindByNameAsync(creds.Username);
-                if (identityUser == null)
+                // complete sign-in
+                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                if (user == null)
                 {
-                    throw new InvalidOperationException($"Unable to load user.");
+                    throw new InvalidOperationException($"Unable to load two-factor authentication user.");
                 }
                 
-                await _signInManager.SignInAsync(identityUser, isPersistent: false);
+                var result = await _signInManager.TwoFactorSignInAsync("FIDO2", string.Empty, false, false);
 
                 // 7. return OK to client
                 return Json(res);
@@ -168,6 +172,3 @@ namespace AspNetCoreIdentityFido2Passwordless
         }
     }
 }
-
-
-//
