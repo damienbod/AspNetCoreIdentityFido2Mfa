@@ -72,10 +72,6 @@ async function handleSignInSubmit(event) {
     }
 }
 
-/**
- * Sends the credential to the the FIDO2 server for assertion
- * @param {any} assertedCredential
- */
 async function verifyAssertionWithServer(assertedCredential) {
 
     // Move data into Arrays incase it is super long
@@ -130,6 +126,5 @@ async function verifyAssertionWithServer(assertedCredential) {
         timer: 2000
     });
 
-    // redirect to dashboard to show keys
-    window.location.href = "/dashboard/" + value("#login-username");
+    window.location.href = "/index";
 }
