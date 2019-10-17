@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using static Fido2NetLib.Fido2;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCoreIdentityFido2Mfa
 {
@@ -20,36 +21,44 @@ namespace AspNetCoreIdentityFido2Mfa
     {
         private Fido2 _lib;
         public static IMetadataService _mds;
-        private string _origin;
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
+        private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
 
-        public SignInFidoController(IConfiguration config,
+        public SignInFidoController(
             Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IOptions<Fido2Configuration> optionsFido2Configuration,
+            IOptions<Fido2MdsConfiguration> optionsFido2MdsConfiguration)
         {
+            _userManager = userManager;
+            _optionsFido2Configuration = optionsFido2Configuration;
+            _optionsFido2MdsConfiguration = optionsFido2MdsConfiguration;
             _signInManager = signInManager;
             _userManager = userManager;
             _fido2Storage = fido2Storage;
-            var MDSAccessKey = config["fido2:MDSAccessKey"];
-            var MDSCacheDirPath = config["fido2:MDSCacheDirPath"] ?? Path.Combine(Path.GetTempPath(), "fido2mdscache");
-            _mds = string.IsNullOrEmpty(MDSAccessKey) ? null : MDSMetadata.Instance(MDSAccessKey, MDSCacheDirPath);
+
+            var MDSCacheDirPath = _optionsFido2MdsConfiguration.Value.MDSCacheDirPath ?? Path.Combine(Path.GetTempPath(), "fido2mdscache");
+            _mds = string.IsNullOrEmpty(_optionsFido2MdsConfiguration.Value.MDSAccessKey) ? null : MDSMetadata.Instance(
+                _optionsFido2MdsConfiguration.Value.MDSAccessKey, MDSCacheDirPath); 
+            
             if (null != _mds)
             {
                 if (false == _mds.IsInitialized())
                     _mds.Initialize().Wait();
             }
-            _origin = config["fido2:origin"];
+
             _lib = new Fido2(new Fido2Configuration()
             {
-                ServerDomain = config["fido2:serverDomain"],
-                ServerName = "Fido2 test",
-                Origin = _origin,
+                ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
+                ServerName = _optionsFido2Configuration.Value.ServerName,
+                Origin = _optionsFido2Configuration.Value.Origin,
                 // Only create and use Metadataservice if we have an acesskey
                 MetadataService = _mds,
-                TimestampDriftTolerance = config.GetValue<int>("fido2:TimestampDriftTolerance")
+                TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
             });
         }
 
