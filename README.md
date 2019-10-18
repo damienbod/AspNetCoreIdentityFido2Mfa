@@ -2,6 +2,10 @@
 
 https://damienbod.com/2019/08/06/asp-net-core-identity-with-fido2-webauthn-mfa/
 
+# Adding FIDO2 Passwordless authentication to an ASP.NET Core Identity App
+
+https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-asp-net-core-identity-app/
+
 ## History
 
 2019-10-18 Added example for FIDO2 passwordless
