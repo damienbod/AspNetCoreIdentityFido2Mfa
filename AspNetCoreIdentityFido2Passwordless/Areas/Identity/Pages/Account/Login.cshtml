@@ -1,0 +1,31 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form action="/mfa" method="post" id="signin">
+                <div class="form-group">
+                    <label name="username">Email</label>
+                    <input name="username" class="form-control" />
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="btn btn-primary">Login</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+</div>
+
+<script src="~/js/helpers.js"></script>
+<script src="~/js/instant.js"></script>
+<script src="~/js/passwordless.login.js"></script>
