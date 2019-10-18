@@ -4,6 +4,8 @@ https://damienbod.com/2019/08/06/asp-net-core-identity-with-fido2-webauthn-mfa/
 
 ## History
 
+2019-10-18 Added example for FIDO2 passwordless
+
 2019-10-07 Updated to .NET Core 3.0
 
 2019-09-20 Updated to .NET Core 3.0 rc1
@@ -15,6 +17,10 @@ https://damienbod.com/2019/08/06/asp-net-core-identity-with-fido2-webauthn-mfa/
 ## Links
 
 https://github.com/abergs/fido2-net-lib
+
+https://webauthn.io/
+
+https://webauthn.guide
 
 https://www.youtube.com/watch?v=qgZ3JO2khFg
 
