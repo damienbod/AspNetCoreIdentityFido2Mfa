@@ -8,6 +8,8 @@ https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-
 
 ## History
 
+2019-12-29 Update to .NET Core 3.1
+
 2019-10-18 Added example for FIDO2 passwordless
 
 2019-10-07 Updated to .NET Core 3.0
