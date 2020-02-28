@@ -1,6 +1,5 @@
 ﻿using Fido2NetLib.Objects;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +7,8 @@ namespace Fido2Identity
 {
     public class FidoStoredCredential
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string Username { get; set; }
         public byte[] UserId { get; set; }
         public byte[] PublicKey { get; set; }
