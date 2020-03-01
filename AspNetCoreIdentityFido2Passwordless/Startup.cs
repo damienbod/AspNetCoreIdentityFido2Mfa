@@ -58,10 +58,10 @@ namespace AspNetCoreIdentityFido2Passwordless
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromMinutes(2);
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
         }
 
