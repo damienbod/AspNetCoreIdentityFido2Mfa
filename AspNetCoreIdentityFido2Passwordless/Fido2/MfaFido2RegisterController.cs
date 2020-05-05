@@ -38,22 +38,11 @@ namespace Fido2Identity
             _optionsFido2MdsConfiguration = optionsFido2MdsConfiguration;
             _fido2Storage = fido2Storage;
 
-            var MDSCacheDirPath = _optionsFido2MdsConfiguration.Value.MDSCacheDirPath ?? Path.Combine(Path.GetTempPath(), "fido2mdscache"); 
-            _mds = string.IsNullOrEmpty(_optionsFido2MdsConfiguration.Value.MDSAccessKey) ? null : MDSMetadata.Instance(
-                _optionsFido2MdsConfiguration.Value.MDSAccessKey, MDSCacheDirPath);
-            if (null != _mds)
-            {
-                if (false == _mds.IsInitialized())
-                    _mds.Initialize().Wait();
-            }
-
             _lib = new Fido2(new Fido2Configuration()
             {
                 ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
                 ServerName = _optionsFido2Configuration.Value.ServerName,
                 Origin = _optionsFido2Configuration.Value.Origin,
-                // Only create and use Metadataservice if we have an acesskey
-                MetadataService = _mds,
                 TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
             });
         }
