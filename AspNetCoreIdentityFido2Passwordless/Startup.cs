@@ -52,7 +52,6 @@ namespace AspNetCoreIdentityFido2Passwordless
             services.AddRazorPages();
 
             services.Configure<Fido2Configuration>(Configuration.GetSection("fido2"));
-            services.Configure<Fido2MdsConfiguration>(Configuration.GetSection("fido2mds"));
             services.AddScoped<Fido2Storage>();
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();

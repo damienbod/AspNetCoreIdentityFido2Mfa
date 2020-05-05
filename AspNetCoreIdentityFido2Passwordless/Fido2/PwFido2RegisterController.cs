@@ -24,18 +24,15 @@ namespace Fido2Identity
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
-        private readonly IOptions<Fido2MdsConfiguration> _optionsFido2MdsConfiguration;
         
 
         public PwFido2RegisterController(
             Fido2Storage fido2Storage, 
             UserManager<IdentityUser> userManager,
-            IOptions<Fido2Configuration> optionsFido2Configuration,
-            IOptions<Fido2MdsConfiguration> optionsFido2MdsConfiguration)
+            IOptions<Fido2Configuration> optionsFido2Configuration)
         {
             _userManager = userManager;
             _optionsFido2Configuration = optionsFido2Configuration;
-            _optionsFido2MdsConfiguration = optionsFido2MdsConfiguration;
             _fido2Storage = fido2Storage;
 
             _lib = new Fido2(new Fido2Configuration()
