@@ -5,23 +5,16 @@ async function handleRegisterSubmit(event) {
 
     let username = this.username.value;
     //let displayName = this.displayName.value;
-
     // passwordfield is omitted in demo
     // let password = this.password.value;
-
     // possible values: none, direct, indirect
     let attestation_type = "none";
     // possible values: <empty>, platform, cross-platform
     let authenticator_attachment = "";
-
     // possible values: preferred, required, discouraged
     let user_verification = "preferred";
-
     // possible values: true,false
     let require_resident_key = false;
-
-
-
     // prepare form post data
     var data = new FormData();
     data.append('username', username);
@@ -42,8 +35,7 @@ async function handleRegisterSubmit(event) {
         showErrorAlert(msg);
     }
 
-
-    console.log("Credential Options Object", makeCredentialOptions);
+    //console.log("Credential Options Object", makeCredentialOptions);
 
     if (makeCredentialOptions.status !== "ok") {
         console.log("Error creating credential options");
@@ -64,34 +56,36 @@ async function handleRegisterSubmit(event) {
 
     if (makeCredentialOptions.authenticatorSelection.authenticatorAttachment === null) makeCredentialOptions.authenticatorSelection.authenticatorAttachment = undefined;
 
-    console.log("Credential Options Formatted", makeCredentialOptions);
+    //console.log("Credential Options Formatted", makeCredentialOptions);
 
-    Swal.fire({
-        title: 'Registering...',
-        text: 'Tap your security key to finish registration.',
-        imageUrl: "/images/securitykey.min.svg",
-        showCancelButton: true,
-        showConfirmButton: false,
-        focusConfirm: false,
-        focusCancel: false
-    });
+    const fido2TapYourSecurityKeyToFinishRegistration = document.getElementById('fido2TapYourSecurityKeyToFinishRegistration').innerText;
+    document.getElementById('fido2mfadisplay').innerHTML += '<br><b>' + fido2TapYourSecurityKeyToFinishRegistration +'</b><img src = "/images/securitykey.min.svg" alt = "fido login" />';
 
+    //Swal.fire({
+    //    title: 'Registering...',
+    //    text: 'Tap your security key to finish registration.',
+    //    imageUrl: "/images/securitykey.min.svg",
+    //    showCancelButton: true,
+    //    showConfirmButton: false,
+    //    focusConfirm: false,
+    //    focusCancel: false
+    //});
 
-    console.log("Creating PublicKeyCredential...");
-    console.log(navigator);
-    console.log(navigator.credentials);
-    console.log(makeCredentialOptions);
+    //console.log("Creating PublicKeyCredential...");
+    //console.log(navigator);
+    //console.log(navigator.credentials);
+    //console.log(makeCredentialOptions);
     let newCredential;
     try {
         newCredential = await navigator.credentials.create({
             publicKey: makeCredentialOptions
         });
     } catch (e) {
-        var msg = "Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenaticator.";
-        console.error(msg, e);
-        showErrorAlert(msg, e);
+        const fido2RegistrationError = document.getElementById('fido2RegistrationError').innerText;
+        console.error(fido2RegistrationError, e);
+        document.getElementById('fido2mfadisplay').innerHTML = '';
+        showErrorAlert(fido2RegistrationError, e);
     }
-
 
     console.log("PublicKeyCredential Created", newCredential);
 
@@ -116,7 +110,6 @@ async function fetchMakeCredentialOptions(formData) {
 
     return data;
 }
-
 
 // This should be used to verify the auth data with the server
 async function registerNewCredential(newCredential) {
@@ -143,7 +136,7 @@ async function registerNewCredential(newCredential) {
         showErrorAlert(e);
     }
 
-    console.log("Credential Object", response);
+    //console.log("Credential Object", response);
 
     // show error
     if (response.status !== "ok") {
@@ -157,11 +150,11 @@ async function registerNewCredential(newCredential) {
     Swal.fire({
         title: 'Registration Successful!',
         text: 'You\'ve registered successfully.',
-        type: 'success',
+       // type: 'success',
         timer: 2000
     });
 
-    window.location.href = "/Identity/Account/Manage/GenerateRecoveryCodes";
+    window.location.href = "/Manage/GenerateRecoveryCodesWarning";
 }
 
 async function registerCredentialWithServer(formData) {

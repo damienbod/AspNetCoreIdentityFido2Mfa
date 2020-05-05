@@ -3,3 +3,4 @@
 /**/bin
 /**/*.csproj.user
 /**/ScaffoldingReadme.txt
+**/node_modules/
