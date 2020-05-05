@@ -25,15 +25,22 @@
 
                     <div class="field">
                         <div class="control">
-                            <button class="btn btn-primary">2FA with Fido2 device</button>
+                            <button class="btn btn-primary">2FA with FIDO2 device</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
+        <div id="fido2logindisplay"></div>
+
     </div>
 </div>
+
+<div style="display:none" id="fido2TapKeyToLogin">FIDO2_TAP_YOUR_SECURITY_KEY_TO_LOGIN</div>
+<div style="display:none" id="fido2CouldNotVerifyAssertion">FIDO2_COULD_NOT_VERIFY_ASSERTION</div>
+<div style="display:none" id="fido2ReturnUrl">@Model.ReturnUrl</div>
+
 
 <script src="~/js/helpers.js"></script>
 <script src="~/js/instant.js"></script>
