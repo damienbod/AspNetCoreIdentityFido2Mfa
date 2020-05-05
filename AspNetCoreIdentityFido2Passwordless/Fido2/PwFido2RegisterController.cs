@@ -7,15 +7,11 @@ using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Fido2NetLib.Fido2;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Fido2Identity
 {
-
     [Route("api/[controller]")]
     public class PwFido2RegisterController : Controller
     {

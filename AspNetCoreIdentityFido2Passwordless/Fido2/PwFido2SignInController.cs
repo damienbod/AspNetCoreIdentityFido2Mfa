@@ -7,13 +7,11 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Fido2Identity
 {
-
     [Route("api/[controller]")]
     public class PwFido2SignInController : Controller
     {
