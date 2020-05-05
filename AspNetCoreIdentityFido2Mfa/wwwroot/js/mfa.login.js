@@ -1,18 +1,18 @@
-﻿document.getElementById('signin').addEventListener('submit', handleSignInSubmit);
+﻿//document.getElementById('signin').addEventListener('click', handleSignInSubmit);
+
+window.onload = function () {
+    handleSignInSubmit();
+};
 
 async function handleSignInSubmit(event) {
-    event.preventDefault();
+    //event.preventDefault();
 
     //let username = this.username.value;
-
     // passwordfield is omitted in demo
     // let password = this.password.value;
-
-
     // prepare form post data
     var formData = new FormData();
     //formData.append('username', username);
-
     // not done in demo
     // todo: validate username + password with server (has nothing to do with FIDO2/WebAuthn)
 
@@ -32,7 +32,7 @@ async function handleSignInSubmit(event) {
         showErrorAlert("Request to server failed", e);
     }
 
-    console.log("Assertion Options Object", makeAssertionOptions);
+    //console.log("Assertion Options Object", makeAssertionOptions);
 
     // show options error to user
     if (makeAssertionOptions.status !== "ok") {
@@ -52,35 +52,42 @@ async function handleSignInSubmit(event) {
         listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
     });
 
-    console.log("Assertion options", makeAssertionOptions);
+    //console.log("Assertion options", makeAssertionOptions);
 
-    Swal.fire({
-        title: 'Logging In...',
-        text: 'Tap your security key to login.',
-        imageUrl: "/images/securitykey.min.svg",
-        showCancelButton: true,
-        showConfirmButton: false,
-        focusConfirm: false,
-        focusCancel: false
-    });
+    const fido2TapKeyToLogin = document.getElementById('fido2TapKeyToLogin').innerText;
+    document.getElementById('fido2logindisplay').innerHTML += '<br><b>' + fido2TapKeyToLogin + '</b><img src = "/images/securitykey.min.svg" alt = "fido login" />';
+
+    //Swal.fire({
+    //    title: 'Logging In...',
+    //    text: 'Tap your security key to login.',
+    //    imageUrl: "/images/securitykey.min.svg",
+    //    showCancelButton: true,
+    //    showConfirmButton: false,
+    //    focusConfirm: false,
+    //    focusCancel: false
+    //});
 
     // ask browser for credentials (browser will ask connected authenticators)
     let credential;
     try {
-        credential = await navigator.credentials.get({ publicKey: makeAssertionOptions })
+        credential = await navigator.credentials.get({ publicKey: makeAssertionOptions });
     } catch (err) {
+        document.getElementById('fido2logindisplay').innerHTML = '';
         showErrorAlert(err.message ? err.message : err);
     }
+
+    //document.getElementById('fido2logindisplay').innerHTML = '<p>Processing</p>';
 
     try {
         await verifyAssertionWithServer(credential);
     } catch (e) {
-        showErrorAlert("Could not verify assertion", e);
+        document.getElementById('fido2logindisplay').innerHTML = '';
+        const fido2CouldNotVerifyAssertion = document.getElementById('fido2CouldNotVerifyAssertion').innerText;
+        showErrorAlert(fido2CouldNotVerifyAssertion, e);
     }
 }
 
 async function verifyAssertionWithServer(assertedCredential) {
-
     // Move data into Arrays incase it is super long
     let authData = new Uint8Array(assertedCredential.response.authenticatorData);
     let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
@@ -115,23 +122,29 @@ async function verifyAssertionWithServer(assertedCredential) {
         throw e;
     }
 
-    console.log("Assertion Object", response);
+    //console.log("Assertion Object", response);
 
     // show error
     if (response.status !== "ok") {
         console.log("Error doing assertion");
         console.log(response.errorMessage);
+        document.getElementById('fido2logindisplay').innerHTML = '';
         showErrorAlert(response.errorMessage);
         return;
     }
 
-    // show success message
-    await Swal.fire({
-        title: 'Logged In!',
-        text: 'You\'re logged in successfully.',
-        type: 'success',
-        timer: 2000
-    });
+    //document.getElementById('fido2logindisplay').innerHTML = '<p>Logged In!</p>';
 
-    window.location.href = "/";
+    // show success message
+    //await Swal.fire({
+    //    title: 'Logged In!',
+    //    text: 'You\'re logged in successfully.',
+    //    //type: 'success',
+    //    timer: 2000
+    //});
+    let fido2ReturnUrl = document.getElementById('fido2ReturnUrl').innerText;
+    if (!fido2ReturnUrl) {
+        fido2ReturnUrl = "/";
+    }
+    window.location.href = fido2ReturnUrl;
 }
