@@ -7,21 +7,21 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
+namespace AspNetCoreIdentityFido2Passwordless.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191016140805_fido2_store")]
-    partial class fido2_store
+    [Migration("20200505193627_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AspNetCoreIdentityFido2Passwordless.FidoStoredCredential", b =>
+            modelBuilder.Entity("Fido2Identity.FidoStoredCredential", b =>
                 {
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
@@ -34,6 +34,11 @@ namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
 
                     b.Property<string>("DescriptorJson")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("PublicKey")
                         .HasColumnType("varbinary(max)");

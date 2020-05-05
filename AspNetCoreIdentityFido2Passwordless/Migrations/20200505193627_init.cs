@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
+namespace AspNetCoreIdentityFido2Passwordless.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +47,32 @@ namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FidoStoredCredential",
+                columns: table => new
+                {
+                    Username = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<byte[]>(nullable: true),
+                    PublicKey = table.Column<byte[]>(nullable: true),
+                    UserHandle = table.Column<byte[]>(nullable: true),
+                    SignatureCounter = table.Column<long>(nullable: false),
+                    CredType = table.Column<string>(nullable: true),
+                    RegDate = table.Column<DateTime>(nullable: false),
+                    AaGuid = table.Column<Guid>(nullable: false),
+                    DescriptorJson = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FidoStoredCredential", x => x.Username);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -73,7 +93,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -209,6 +229,9 @@ namespace AspNetCoreIdentityFido2Passwordless.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FidoStoredCredential");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
