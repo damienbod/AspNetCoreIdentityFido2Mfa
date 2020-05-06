@@ -21,8 +21,10 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
 
             modelBuilder.Entity("Fido2Identity.FidoStoredCredential", b =>
                 {
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<Guid>("AaGuid")
                         .HasColumnType("uniqueidentifier");
@@ -32,11 +34,6 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
 
                     b.Property<string>("DescriptorJson")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("PublicKey")
                         .HasColumnType("varbinary(max)");
@@ -53,7 +50,10 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                     b.Property<byte[]>("UserId")
                         .HasColumnType("varbinary(max)");
 
-                    b.HasKey("Username");
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("FidoStoredCredential");
                 });

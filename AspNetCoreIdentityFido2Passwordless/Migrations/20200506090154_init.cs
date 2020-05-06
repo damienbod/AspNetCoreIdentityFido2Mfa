@@ -50,9 +50,9 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                 name: "FidoStoredCredential",
                 columns: table => new
                 {
-                    Username = table.Column<string>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(nullable: true),
                     UserId = table.Column<byte[]>(nullable: true),
                     PublicKey = table.Column<byte[]>(nullable: true),
                     UserHandle = table.Column<byte[]>(nullable: true),
@@ -64,7 +64,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FidoStoredCredential", x => x.Username);
+                    table.PrimaryKey("PK_FidoStoredCredential", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(

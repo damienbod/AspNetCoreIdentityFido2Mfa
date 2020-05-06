@@ -18,7 +18,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<FidoStoredCredential>().HasKey(m => m.Username);
+            builder.Entity<FidoStoredCredential>().HasKey(m => m.Id);
 
             base.OnModelCreating(builder);
         }
