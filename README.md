@@ -8,6 +8,8 @@ https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-
 
 ## History
 
+2020-05-06 Fix FIDO2 database model
+
 2020-05-05 Updated nuget packages, FIDO2 1.1.0
 
 2020-02-28 Updated nuget packages, add support for multiple keys per user
