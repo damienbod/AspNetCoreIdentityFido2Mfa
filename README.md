@@ -8,6 +8,8 @@ https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-
 
 ## History
 
+2020-09-11 Added Anti-forgery protection, Updated Nuget packages, npm packages
+
 2020-08-28 Fix Bad URL register FIDO key, Updated Nuget packages, npm packages
 
 2020-05-06 Fix FIDO2 database model
