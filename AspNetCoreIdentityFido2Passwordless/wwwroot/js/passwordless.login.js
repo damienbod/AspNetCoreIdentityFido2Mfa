@@ -16,7 +16,8 @@ async function handleSignInSubmit(event) {
             method: 'POST', // or 'PUT'
             body: formData, // data can be `string` or {object}!
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'RequestVerificationToken': '@AntiForgery.GetAndStoreTokens(HttpContext).RequestToken'
             }
         });
 
@@ -98,7 +99,8 @@ async function verifyAssertionWithServer(assertedCredential) {
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': '@AntiForgery.GetAndStoreTokens(HttpContext).RequestToken'
             }
         });
 
