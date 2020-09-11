@@ -12,7 +12,7 @@ async function handleRegisterSubmit(event) {
     let authenticator_attachment = "";
 
     // possible values: preferred, required, discouraged
-    let user_verification = "preferred";
+    let user_verification = "required";
 
     // possible values: true,false
     let require_resident_key = false;
@@ -153,7 +153,7 @@ async function registerNewCredential(newCredential) {
     Swal.fire({
         title: 'Registration Successful!',
         text: 'You\'ve registered successfully.',
-        type: 'success',
+        // type: 'success',
         timer: 2000
     });
 
