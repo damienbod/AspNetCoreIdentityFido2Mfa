@@ -22,7 +22,7 @@
 
                 <h3 class="title is-3">Fido2 2FA</h3>
                 <form action="/LoginFido2Mfa" method="post" id="signin">
-
+                    @Html.AntiForgeryToken()
                     <div class="field">
                         <div class="control">
                             <button class="btn btn-primary">2FA with FIDO2 device</button>

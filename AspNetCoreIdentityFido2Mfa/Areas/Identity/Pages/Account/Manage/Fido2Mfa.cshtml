@@ -23,6 +23,7 @@
 
                 <h3 class="title is-3">Add a Fido2 MFA</h3>
                 <form action="/Fido2Mfa" method="post" id="register">
+                    @Html.AntiForgeryToken()
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control has-icons-left has-icons-right">

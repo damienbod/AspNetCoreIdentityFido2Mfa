@@ -10,6 +10,7 @@
     <div class="col-md-4">
         <section>
             <form action="/mfa" method="post" id="signin">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label name="username">Email</label>
                     <input name="username" class="form-control" />
