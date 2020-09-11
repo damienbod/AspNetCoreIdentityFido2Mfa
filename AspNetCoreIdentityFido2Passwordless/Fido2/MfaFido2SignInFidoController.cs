@@ -67,7 +67,7 @@ namespace Fido2Identity
 
                 if (!string.IsNullOrEmpty(identityUser.UserName))
                 {
-                    
+
                     var user = new Fido2User
                     {
                         DisplayName = identityUser.UserName,
@@ -146,7 +146,7 @@ namespace Fido2Identity
                 {
                     throw new InvalidOperationException($"Unable to load two-factor authentication user.");
                 }
-                
+
                 var result = await _signInManager.TwoFactorSignInAsync("FIDO2", string.Empty, false, false);
 
                 // 7. return OK to client

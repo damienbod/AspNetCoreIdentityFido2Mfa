@@ -11,7 +11,7 @@ namespace Fido2Identity
 {
     public class Fido2Storage
     {
-       private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ApplicationDbContext _applicationDbContext;
 
         public Fido2Storage(ApplicationDbContext applicationDbContext)
         {

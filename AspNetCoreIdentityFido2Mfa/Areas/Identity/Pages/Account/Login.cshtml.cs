@@ -24,7 +24,7 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly Fido2Storage _fido2Storage;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, 
+        public LoginModel(SignInManager<IdentityUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<IdentityUser> userManager,
             IEmailSender emailSender,
@@ -104,7 +104,7 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
                         return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                     }
                 }
-                
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
