@@ -51,6 +51,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/mfaassertionOptions")]
         public async Task<ActionResult> AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
         {
@@ -105,6 +106,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/mfamakeAssertion")]
         public async Task<JsonResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse clientResponse)
         {

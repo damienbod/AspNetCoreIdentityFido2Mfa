@@ -102,7 +102,8 @@ async function fetchMakeCredentialOptions(formData) {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 
@@ -164,7 +165,8 @@ async function registerCredentialWithServer(formData) {
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 

@@ -46,6 +46,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwmakeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
@@ -98,6 +99,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwmakeCredential")]
         public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
         {

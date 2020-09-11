@@ -7,13 +7,11 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Fido2Identity
 {
-
     [Route("api/[controller]")]
     public class PwFido2SignInController : Controller
     {
@@ -51,6 +49,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwassertionOptions")]
         public async Task<ActionResult> AssertionOptionsPost([FromForm] string username, [FromForm] string userVerification)
         {
@@ -100,6 +99,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwmakeAssertion")]
         public async Task<JsonResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse clientResponse)
         {

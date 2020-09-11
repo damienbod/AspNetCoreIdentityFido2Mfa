@@ -3,6 +3,13 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken;
+    }
+}
 @model AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.MfaModel
 @{
     ViewData["Title"] = "Login with Fido2 MFA";
@@ -22,7 +29,7 @@
 
                 <h3 class="title is-3">Fido2 2FA</h3>
                 <form action="/LoginFido2Mfa" method="post" id="signin">
-
+                    <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
                     <div class="field">
                         <div class="control">
                             <button class="btn btn-primary">2FA with FIDO2 device</button>

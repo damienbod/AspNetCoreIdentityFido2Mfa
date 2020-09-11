@@ -7,15 +7,11 @@ using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Fido2NetLib.Fido2;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Fido2Identity
 {
-
     [Route("api/[controller]")]
     public class PwFido2RegisterController : Controller
     {
@@ -50,6 +46,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwmakeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
@@ -102,6 +99,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/pwmakeCredential")]
         public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
         {

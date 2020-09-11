@@ -12,7 +12,7 @@ async function handleRegisterSubmit(event) {
     let authenticator_attachment = "";
 
     // possible values: preferred, required, discouraged
-    let user_verification = "preferred";
+    let user_verification = "required";
 
     // possible values: true,false
     let require_resident_key = false;
@@ -99,11 +99,14 @@ async function handleRegisterSubmit(event) {
 }
 
 async function fetchMakeCredentialOptions(formData) {
+    id = "RequestVerificationToken" 
+
     let response = await fetch('/pwmakeCredentialOptions', {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 
@@ -152,7 +155,7 @@ async function registerNewCredential(newCredential) {
     Swal.fire({
         title: 'Registration Successful!',
         text: 'You\'ve registered successfully.',
-        type: 'success',
+        // type: 'success',
         timer: 2000
     });
 
@@ -166,7 +169,8 @@ async function registerCredentialWithServer(formData) {
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 

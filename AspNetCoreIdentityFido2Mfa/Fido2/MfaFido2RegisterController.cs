@@ -24,6 +24,7 @@ namespace Fido2Identity
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
+        
 
         public MfaFido2RegisterController(
             Fido2Storage fido2Storage, 
@@ -49,6 +50,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/mfamakeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
         {
@@ -102,6 +104,7 @@ namespace Fido2Identity
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/mfamakeCredential")]
         public async Task<JsonResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
         {
