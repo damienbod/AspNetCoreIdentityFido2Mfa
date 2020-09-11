@@ -20,10 +20,10 @@ namespace Fido2Identity
         private readonly Fido2Storage _fido2Storage;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
-        
+
 
         public PwFido2RegisterController(
-            Fido2Storage fido2Storage, 
+            Fido2Storage fido2Storage,
             UserManager<IdentityUser> userManager,
             IOptions<Fido2Configuration> optionsFido2Configuration)
         {
@@ -67,7 +67,7 @@ namespace Fido2Identity
                 // 2. Get user existing keys by username
                 var items = await _fido2Storage.GetCredentialsByUsername(username);
                 var existingKeys = new List<PublicKeyCredentialDescriptor>();
-                foreach(var publicKeyCredentialDescriptor in items)
+                foreach (var publicKeyCredentialDescriptor in items)
                 {
                     existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
                 }

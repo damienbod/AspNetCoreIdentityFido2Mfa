@@ -138,7 +138,7 @@ namespace Fido2Identity
                 {
                     throw new InvalidOperationException($"Unable to load user.");
                 }
-                
+
                 await _signInManager.SignInAsync(identityUser, isPersistent: false);
 
                 // 7. return OK to client

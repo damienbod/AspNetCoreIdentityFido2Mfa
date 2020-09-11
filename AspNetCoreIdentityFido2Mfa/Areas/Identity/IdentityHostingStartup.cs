@@ -14,7 +14,8 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
+            builder.ConfigureServices((context, services) =>
+            {
             });
         }
     }
