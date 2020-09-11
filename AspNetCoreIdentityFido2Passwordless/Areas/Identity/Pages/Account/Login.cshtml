@@ -1,4 +1,11 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken;
+    }
+}
 @model LoginModel
 
 @{
@@ -10,7 +17,7 @@
     <div class="col-md-4">
         <section>
             <form action="/mfa" method="post" id="signin">
-                @Html.AntiForgeryToken()
+                <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
                 <div class="form-group">
                     <label name="username">Email</label>
                     <input name="username" class="form-control" />

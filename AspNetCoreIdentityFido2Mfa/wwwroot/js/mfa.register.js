@@ -103,7 +103,7 @@ async function fetchMakeCredentialOptions(formData) {
         body: formData, // data can be `string` or {object}!
         headers: {
             'Accept': 'application/json',
-            'RequestVerificationToken': '@AntiForgery.GetAndStoreTokens(HttpContext).RequestToken'
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 
@@ -166,7 +166,7 @@ async function registerCredentialWithServer(formData) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'RequestVerificationToken': '@AntiForgery.GetAndStoreTokens(HttpContext).RequestToken'
+            'RequestVerificationToken': document.getElementById('RequestVerificationToken').value
         }
     });
 

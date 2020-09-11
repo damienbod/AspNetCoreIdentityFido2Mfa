@@ -2,6 +2,13 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken;
+    }
+}
 @model AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage.MfaModel
 @{
     Layout = "_Layout.cshtml";
@@ -23,7 +30,7 @@
 
                 <h3 class="title is-3">Add a Fido2 MFA</h3>
                 <form action="/Fido2Mfa" method="post" id="register">
-                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control has-icons-left has-icons-right">
