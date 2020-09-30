@@ -59,3 +59,7 @@ https://developers.yubico.com/FIDO2/Libraries/Using_a_library.html
 https://medium.com/@herrjemand
 
 https://github.com/w3c/webauthn
+
+https://passthesalt.ubicast.tv/videos/2020-replacing-passwords-with-fido2/
+
+https://www.youtube.com/watch?v=S8Z1p_2yAzg&feature=youtu.be
