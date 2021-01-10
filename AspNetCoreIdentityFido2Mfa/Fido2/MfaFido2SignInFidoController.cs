@@ -20,20 +20,16 @@ namespace Fido2Identity
         private Fido2 _lib;
         public static IMetadataService _mds;
         private readonly Fido2Storage _fido2Storage;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
 
         public MfaFido2SignInFidoController(
             Fido2Storage fido2Storage,
-            UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IOptions<Fido2Configuration> optionsFido2Configuration)
         {
-            _userManager = userManager;
             _optionsFido2Configuration = optionsFido2Configuration;
             _signInManager = signInManager;
-            _userManager = userManager;
             _fido2Storage = fido2Storage;
 
             _lib = new Fido2(new Fido2Configuration()
