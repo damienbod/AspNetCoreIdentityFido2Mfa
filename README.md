@@ -1,4 +1,5 @@
-# ASP.NET Core Identity with FIDO2  ( WebAuthn MFA and Passwordless )
+# ASP.NET Core Identity with FIDO2 WebAuthn, MFA and Passwordless 
+
 [![.NET](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/workflows/.NET/badge.svg)](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/actions?query=workflow%3A.NET)
 
 ## Blogs
