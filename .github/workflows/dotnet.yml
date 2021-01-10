@@ -27,7 +27,7 @@ jobs:
         node-version: 12
 
     - name: Installing Dependencies
-      run: sudo npm install AspNetCoreIdentityFido2Mfa/package.json
+      run: sudo npm install
 
     - name: Build
       run: dotnet build --no-restore
