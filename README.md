@@ -14,6 +14,8 @@ https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-
 
 ## History
 
+2021-04-03 Update npm packages
+
 2021-03-20 Update npm, nuget packages
 
 2021-01-10 Update .NET 5, code clean up
