@@ -2,6 +2,16 @@
 
 [![.NET](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/workflows/.NET/badge.svg)](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/actions?query=workflow%3A.NET)
 
+## Database
+
+```
+Add-Migration "init_identity" 
+```
+
+```
+Update-Database
+```
+
 ## Blogs
 
 ASP.NET Core Identity with FIDO2 WebAuthn MFA
@@ -13,6 +23,8 @@ Adding FIDO2 Passwordless authentication to an ASP.NET Core Identity App
 https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-asp-net-core-identity-app/
 
 ## History
+
+2021-08-20 Update npm packages
 
 2021-04-03 Update npm packages
 
