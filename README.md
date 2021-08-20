@@ -2,6 +2,16 @@
 
 [![.NET](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/workflows/.NET/badge.svg)](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/actions?query=workflow%3A.NET)
 
+## Database
+
+```
+Add-Migration "init_identity" 
+```
+
+```
+Update-Database
+```
+
 ## Blogs
 
 ASP.NET Core Identity with FIDO2 WebAuthn MFA
