@@ -21,12 +21,17 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Setup Node.js 12
+    - name: Setup Node.js 14
       uses: actions/setup-node@v1
       with:
         node-version: 12
 
-    - name: Installing Dependencies
+    - name: Installing Dependencies AspNetCoreIdentityFido2Mfa
+      working-directory: AspNetCoreIdentityFido2Mfa
+      run: sudo npm install
+
+    - name: Installing Dependencies AspNetCoreIdentityFido2Passwordless
+      working-directory: AspNetCoreIdentityFido2Passwordless
       run: sudo npm install
 
     - name: Build
