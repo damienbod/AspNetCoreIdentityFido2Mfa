@@ -8,9 +8,9 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage;
 
 public class ResetAuthenticatorModel : PageModel
 {
-    UserManager<IdentityUser> _userManager;
+    readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
-    ILogger<ResetAuthenticatorModel> _logger;
+    readonly ILogger<ResetAuthenticatorModel> _logger;
 
     public ResetAuthenticatorModel(
         UserManager<IdentityUser> userManager,

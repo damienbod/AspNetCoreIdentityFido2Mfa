@@ -15,7 +15,7 @@ namespace Fido2Identity;
 [Route("api/[controller]")]
 public class PwFido2RegisterController : Controller
 {
-    private Fido2 _lib;
+    private readonly Fido2 _lib;
     public static IMetadataService _mds;
     private readonly Fido2Storage _fido2Storage;
     private readonly UserManager<IdentityUser> _userManager;

@@ -7,7 +7,6 @@ using Fido2NetLib.Objects;
 using Fido2NetLib;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -16,7 +15,7 @@ namespace Fido2Identity;
 [Route("api/[controller]")]
 public class MfaFido2SignInFidoController : Controller
 {
-    private Fido2 _lib;
+    private readonly Fido2 _lib;
     public static IMetadataService _mds;
     private readonly Fido2Storage _fido2Storage;
     private readonly SignInManager<IdentityUser> _signInManager;
