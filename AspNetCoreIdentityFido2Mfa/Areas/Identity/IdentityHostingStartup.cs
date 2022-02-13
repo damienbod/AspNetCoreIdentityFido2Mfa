@@ -1,22 +1,14 @@
-﻿using System;
-using AspNetCoreIdentityFido2Mfa.Data;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(AspNetCoreIdentityFido2Mfa.Areas.Identity.IdentityHostingStartup))]
-namespace AspNetCoreIdentityFido2Mfa.Areas.Identity
+namespace AspNetCoreIdentityFido2Mfa.Areas.Identity;
+
+public class IdentityHostingStartup : IHostingStartup
 {
-    public class IdentityHostingStartup : IHostingStartup
+    public void Configure(IWebHostBuilder builder)
     {
-        public void Configure(IWebHostBuilder builder)
+        builder.ConfigureServices((context, services) =>
         {
-            builder.ConfigureServices((context, services) =>
-            {
-            });
-        }
+        });
     }
 }
