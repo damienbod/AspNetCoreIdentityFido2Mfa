@@ -11,7 +11,7 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-    public DbSet<FidoStoredCredential> FidoStoredCredential { get; set; }
+    public virtual DbSet<FidoStoredCredential> FidoStoredCredential { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
