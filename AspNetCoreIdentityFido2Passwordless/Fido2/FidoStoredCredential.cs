@@ -9,6 +9,9 @@ namespace Fido2Identity;
 /// </summary>
 public class FidoStoredCredential
 {
+    /// <summary>
+    /// Gets or sets the primary key for this user.
+    /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public virtual int Id { get; set; }
 
