@@ -11,6 +11,9 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
+    /// <summary>
+    /// Gets or sets the <see cref="DbSet{TEntity}"/> of FIDO2 stored credentials.
+    /// </summary>
     public virtual DbSet<FidoStoredCredential> FidoStoredCredential { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
