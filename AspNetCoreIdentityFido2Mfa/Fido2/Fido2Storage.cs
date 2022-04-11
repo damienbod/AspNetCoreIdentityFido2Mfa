@@ -50,7 +50,7 @@ public class Fido2Storage
 
     public Task<ICollection<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
     {
-        return Task.FromResult(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
+        return Task.FromResult<ICollection<FidoStoredCredential>>(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
     }
 
     public async Task UpdateCounter(byte[] credentialId, uint counter)
