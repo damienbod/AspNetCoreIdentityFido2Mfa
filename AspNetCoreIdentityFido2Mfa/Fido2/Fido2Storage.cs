@@ -18,7 +18,7 @@ public class Fido2Storage
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<List<FidoStoredCredential>> GetCredentialsByUsername(string username)
+    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUsername(string username)
     {
         return await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).ToListAsync();
     }
@@ -48,7 +48,7 @@ public class Fido2Storage
         return cred;
     }
 
-    public Task<List<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
+    public Task<ICollection<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
     {
         return Task.FromResult(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
     }
@@ -72,7 +72,7 @@ public class Fido2Storage
         await _applicationDbContext.SaveChangesAsync();
     }
 
-    public async Task<List<Fido2User>> GetUsersByCredentialIdAsync(byte[] credentialId)
+    public async Task<ICollection<Fido2User>> GetUsersByCredentialIdAsync(byte[] credentialId)
     {
         var credentialIdString = Base64Url.Encode(credentialId);
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
