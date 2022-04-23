@@ -18,14 +18,14 @@ public class Fido2Storage
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUsername(string username)
+    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUserName(string username)
     {
-        return await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).ToListAsync();
+        return await _applicationDbContext.FidoStoredCredential.Where(c => c.UserName == username).ToListAsync();
     }
 
-    public async Task RemoveCredentialsByUsername(string username)
+    public async Task RemoveCredentialsByUserName(string username)
     {
-        var items = await _applicationDbContext.FidoStoredCredential.Where(c => c.Username == username).ToListAsync();
+        var items = await _applicationDbContext.FidoStoredCredential.Where(c => c.UserName == username).ToListAsync();
         if (items != null)
         {
             foreach (var fido2Key in items)

@@ -94,7 +94,7 @@ public class LoginModel : PageModel
             }
             if (result.RequiresTwoFactor)
             {
-                var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUsername(Input.Email);
+                var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUserName(Input.Email);
                 if (fido2ItemExistsForUser.Count > 0)
                 {
                     return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, Input.RememberMe });

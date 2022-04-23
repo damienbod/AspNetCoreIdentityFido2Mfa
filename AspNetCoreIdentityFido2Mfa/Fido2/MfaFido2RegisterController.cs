@@ -69,7 +69,7 @@ public class MfaFido2RegisterController : Controller
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
+            var items = await _fido2Storage.GetCredentialsByUserName(identityUser.UserName);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
             foreach (var publicKeyCredentialDescriptor in items)
             {
@@ -128,7 +128,7 @@ public class MfaFido2RegisterController : Controller
             // 3. Store the credentials in db
             await _fido2Storage.AddCredentialToUser(options.User, new FidoStoredCredential
             {
-                Username = options.User.Name,
+                UserName = options.User.Name,
                 Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
                 PublicKey = success.Result.PublicKey,
                 UserHandle = success.Result.User.Id,

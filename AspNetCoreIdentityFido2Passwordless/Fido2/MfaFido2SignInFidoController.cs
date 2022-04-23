@@ -72,7 +72,7 @@ public class MfaFido2SignInFidoController : Controller
                 if (user == null) throw new ArgumentException("Username was not registered");
 
                 // 2. Get registered credentials from database
-                var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
+                var items = await _fido2Storage.GetCredentialsByUserName(identityUser.UserName);
                 existingCredentials = items.Select(c => c.Descriptor).ToList();
             }
 

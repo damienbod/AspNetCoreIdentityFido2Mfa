@@ -18,7 +18,7 @@ public class FidoStoredCredential
     /// <summary>
     /// Gets or sets the user name for this user.
     /// </summary>
-    public virtual string Username { get; set; }
+    public virtual string UserName { get; set; }
 
     public virtual byte[] UserId { get; set; }
 
