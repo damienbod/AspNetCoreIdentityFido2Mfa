@@ -124,7 +124,7 @@ public class PwFido2SignInController : Controller
             IsUserHandleOwnerOfCredentialIdAsync callback = async (args) =>
             {
                 var storedCreds = await _fido2Storage.GetCredentialsByUserHandleAsync(args.UserHandle);
-                return storedCreds.Exists(c => c.Descriptor.Id.SequenceEqual(args.CredentialId));
+                return storedCreds.Any(c => c.Descriptor.Id.SequenceEqual(args.CredentialId));
             };
 
             // 5. Make the assertion
