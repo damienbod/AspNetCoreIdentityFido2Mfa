@@ -65,7 +65,7 @@ public class PwFido2RegisterController : Controller
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Storage.GetCredentialsByUserName(username);
+            var items = await _fido2Storage.GetCredentialsByUserNameAsync(username);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
             foreach (var publicKeyCredentialDescriptor in items)
             {
@@ -122,7 +122,7 @@ public class PwFido2RegisterController : Controller
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
             // 3. Store the credentials in db
-            await _fido2Storage.AddCredentialToUser(options.User, new FidoStoredCredential
+            await _fido2Storage.AddCredentialToUserAsync(options.User, new FidoStoredCredential
             {
                 UserName = options.User.Name,
                 Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
