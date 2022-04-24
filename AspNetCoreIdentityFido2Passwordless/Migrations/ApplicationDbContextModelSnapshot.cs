@@ -50,7 +50,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                     b.Property<byte[]>("UserId")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

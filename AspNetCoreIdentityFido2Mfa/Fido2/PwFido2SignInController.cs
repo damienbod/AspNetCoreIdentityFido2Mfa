@@ -71,7 +71,7 @@ public class PwFido2SignInController : Controller
                 if (user == null) throw new ArgumentException("Username was not registered");
 
                 // 2. Get registered credentials from database
-                var items = await _fido2Storage.GetCredentialsByUsername(identityUser.UserName);
+                var items = await _fido2Storage.GetCredentialsByUserName(identityUser.UserName);
                 existingCredentials = items.Select(c => c.Descriptor).ToList();
             }
 
@@ -133,7 +133,7 @@ public class PwFido2SignInController : Controller
             // 6. Store the updated counter
             await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
 
-            var identityUser = await _userManager.FindByNameAsync(creds.Username);
+            var identityUser = await _userManager.FindByNameAsync(creds.UserName);
             if (identityUser == null)
             {
                 throw new InvalidOperationException($"Unable to load user.");
