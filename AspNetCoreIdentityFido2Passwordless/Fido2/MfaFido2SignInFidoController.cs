@@ -72,7 +72,7 @@ public class MfaFido2SignInFidoController : Controller
                 if (user == null) throw new ArgumentException("Username was not registered");
 
                 // 2. Get registered credentials from database
-                var items = await _fido2Storage.GetCredentialsByUserName(identityUser.UserName);
+                var items = await _fido2Storage.GetCredentialsByUserNameAsync(identityUser.UserName);
                 existingCredentials = items.Select(c => c.Descriptor).ToList();
             }
 
@@ -111,7 +111,7 @@ public class MfaFido2SignInFidoController : Controller
             var options = AssertionOptions.FromJson(jsonOptions);
 
             // 2. Get registered credential from database
-            var creds = await _fido2Storage.GetCredentialById(clientResponse.Id);
+            var creds = await _fido2Storage.GetCredentialByIdAsync(clientResponse.Id);
 
             if (creds == null)
             {
@@ -132,7 +132,7 @@ public class MfaFido2SignInFidoController : Controller
             var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
 
             // 6. Store the updated counter
-            await _fido2Storage.UpdateCounter(res.CredentialId, res.Counter);
+            await _fido2Storage.UpdateCounterAsync(res.CredentialId, res.Counter);
 
             // complete sign-in
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
