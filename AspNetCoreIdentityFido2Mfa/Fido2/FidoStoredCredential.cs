@@ -10,34 +10,37 @@ namespace Fido2Identity;
 /// </summary>
 public class FidoStoredCredential
 {
+    /// <summary>
+    /// Gets or sets the primary key for this user.
+    /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public virtual int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the user name for this user.
     /// </summary>
-    public string Username { get; set; }
+    public virtual string UserName { get; set; }
 
-    public byte[] UserId { get; set; }
+    public virtual byte[] UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the public key for this user.
     /// </summary>
-    public byte[] PublicKey { get; set; }
+    public virtual byte[] PublicKey { get; set; }
 
     /// <summary>
     /// Gets or sets the user handle for this user.
     /// </summary>
-    public byte[] UserHandle { get; set; }
+    public virtual byte[] UserHandle { get; set; }
 
-    public uint SignatureCounter { get; set; }
+    public virtual uint SignatureCounter { get; set; }
 
-    public string CredType { get; set; }
+    public virtual string CredType { get; set; }
     
     /// <summary>
     /// Gets or sets the registration date for this user.
     /// </summary>
-    public DateTime RegDate { get; set; }
+    public virtual DateTime RegDate { get; set; }
 
     /// <summary>
     /// Gets or sets the Authenticator Attestation GUID (AAGUID) for this user.
@@ -45,7 +48,7 @@ public class FidoStoredCredential
     /// <remarks>
     /// An AAGUID is a 128-bit identifier indicating the type of the authenticator.
     /// </remarks>
-    public Guid AaGuid { get; set; }
+    public virtual Guid AaGuid { get; set; }
 
     [NotMapped]
     public PublicKeyCredentialDescriptor Descriptor
@@ -53,5 +56,6 @@ public class FidoStoredCredential
         get { return string.IsNullOrWhiteSpace(DescriptorJson) ? null : JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(DescriptorJson); }
         set { DescriptorJson = JsonConvert.SerializeObject(value); }
     }
-    public string DescriptorJson { get; set; }
+
+    public virtual string DescriptorJson { get; set; }
 }

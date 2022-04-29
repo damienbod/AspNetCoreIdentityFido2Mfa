@@ -52,7 +52,7 @@ public class Disable2faModel : PageModel
         }
 
         // remove Fido2 MFA if it exists
-        await _fido2Storage.RemoveCredentialsByUsername(user.UserName);
+        await _fido2Storage.RemoveCredentialsByUserNameAsync(user.UserName);
 
         var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
         if (!disable2faResult.Succeeded)
