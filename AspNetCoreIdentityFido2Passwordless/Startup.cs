@@ -1,15 +1,8 @@
-using System;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreIdentityFido2Passwordless.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Fido2NetLib;
 using Fido2Identity;
-using Microsoft.AspNetCore.Http;
 
 namespace AspNetCoreIdentityFido2Passwordless;
 

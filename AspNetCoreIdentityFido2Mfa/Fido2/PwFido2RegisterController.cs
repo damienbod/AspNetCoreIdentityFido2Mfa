@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Fido2NetLib.Objects;
 using Fido2NetLib;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Fido2NetLib.Fido2;
 using Microsoft.AspNetCore.Identity;

@@ -1,6 +1,5 @@
 ﻿using Fido2NetLib.Objects;
 using Newtonsoft.Json;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fido2Identity;

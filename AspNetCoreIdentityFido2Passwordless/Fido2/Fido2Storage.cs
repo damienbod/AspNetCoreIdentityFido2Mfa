@@ -1,11 +1,7 @@
 ﻿using AspNetCoreIdentityFido2Passwordless.Data;
 using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Fido2Identity;
 
