@@ -1,8 +1,11 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -13,140 +16,136 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Fido2Identity;
 
-namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account;
-
-[AllowAnonymous]
-public class LoginModel : PageModel
+namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly ILogger<LoginModel> _logger;
-    private readonly IEmailSender _emailSender;
-    private readonly Fido2Storage _fido2Storage;
-
-    public LoginModel(SignInManager<IdentityUser> signInManager,
-        ILogger<LoginModel> logger,
-        UserManager<IdentityUser> userManager,
-        IEmailSender emailSender,
-        Fido2Storage fido2Storage)
+    public class LoginModel : PageModel
     {
-        _fido2Storage = fido2Storage;
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _emailSender = emailSender;
-        _logger = logger;
-    }
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly Fido2Storage _fido2Storage;
+        private readonly ILogger<LoginModel> _logger;
 
-    [BindProperty]
-    public InputModel Input { get; set; }
-
-    public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-    public string ReturnUrl { get; set; }
-
-    [TempData]
-    public string ErrorMessage { get; set; }
-
-    public class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
-    }
-
-    public async Task OnGetAsync(string returnUrl = null)
-    {
-        if (!string.IsNullOrEmpty(ErrorMessage))
+        public LoginModel(SignInManager<IdentityUser> signInManager,
+            Fido2Storage fido2Storage,
+            ILogger<LoginModel> logger)
         {
-            ModelState.AddModelError(string.Empty, ErrorMessage);
+            _signInManager = signInManager;
+            _fido2Storage = fido2Storage;
+            _logger = logger;
         }
 
-        returnUrl ??= Url.Content("~/");
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        [BindProperty]
+        public InputModel Input { get; set; }
 
-        // Clear the existing external cookie to ensure a clean login process
-        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        public string ReturnUrl { get; set; }
 
-        ReturnUrl = returnUrl;
-    }
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        [TempData]
+        public string ErrorMessage { get; set; }
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-    {
-        returnUrl ??= Url.Content("~/");
-
-        if (ModelState.IsValid)
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        public class InputModel
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
-            if (result.Succeeded)
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            [Display(Name = "Remember me?")]
+            public bool RememberMe { get; set; }
+        }
+
+        public async Task OnGetAsync(string returnUrl = null)
+        {
+            if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                _logger.LogInformation("User logged in.");
-                return LocalRedirect(returnUrl);
+                ModelState.AddModelError(string.Empty, ErrorMessage);
             }
-            if (result.RequiresTwoFactor)
+
+            returnUrl ??= Url.Content("~/");
+
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            ReturnUrl = returnUrl;
+        }
+
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (ModelState.IsValid)
             {
-                var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUserNameAsync(Input.Email);
-                if (fido2ItemExistsForUser.Count > 0)
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
                 {
-                    return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, Input.RememberMe });
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUserNameAsync(Input.Email);
+                    if (fido2ItemExistsForUser.Count > 0)
+                    {
+                        return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, Input.RememberMe });
+                    }
+
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
                 }
             }
 
-            if (result.IsLockedOut)
-            {
-                _logger.LogWarning("User account locked out.");
-                return RedirectToPage("./Lockout");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return Page();
-            }
-        }
-
-        // If we got this far, something failed, redisplay form
-        return Page();
-    }
-
-    public async Task<IActionResult> OnPostSendVerificationEmailAsync()
-    {
-        if (!ModelState.IsValid)
-        {
+            // If we got this far, something failed, redisplay form
             return Page();
         }
-
-        var user = await _userManager.FindByEmailAsync(Input.Email);
-        if (user == null)
-        {
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-        }
-
-        var userId = await _userManager.GetUserIdAsync(user);
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var callbackUrl = Url.Page(
-            "/Account/ConfirmEmail",
-            pageHandler: null,
-            values: new { userId, code },
-            protocol: Request.Scheme);
-        await _emailSender.SendEmailAsync(
-            Input.Email,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-        ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-        return Page();
     }
 }

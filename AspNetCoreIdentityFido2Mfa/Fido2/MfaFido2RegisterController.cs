@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Fido2NetLib.Objects;
 using Fido2NetLib;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Fido2NetLib.Fido2;
-using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Fido2Identity;
 
 [Route("api/[controller]")]
 public class MfaFido2RegisterController : Controller
 {
-    private Fido2 _lib;
-    public static IMetadataService _mds;
+    private readonly Fido2 _lib;
+    public static IMetadataService? _mds;
     private readonly Fido2Storage _fido2Storage;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
-
 
     public MfaFido2RegisterController(
         Fido2Storage fido2Storage,
@@ -43,7 +35,7 @@ public class MfaFido2RegisterController : Controller
         });
     }
 
-    private string FormatException(Exception e)
+    private static string FormatException(Exception e)
     {
         return string.Format("{0}{1}", e.Message, e.InnerException != null ? " (" + e.InnerException.Message + ")" : "");
     }
@@ -73,7 +65,8 @@ public class MfaFido2RegisterController : Controller
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
             foreach (var publicKeyCredentialDescriptor in items)
             {
-                existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                if(publicKeyCredentialDescriptor.Descriptor != null)
+                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
             }
 
             // 3. Create options
@@ -114,13 +107,13 @@ public class MfaFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 2. Create callback so that lib can verify credential id is unique to this user
-            IsCredentialIdUniqueToUserAsyncDelegate callback = async (IsCredentialIdUniqueToUserParams args) =>
+            async Task<bool> callback(IsCredentialIdUniqueToUserParams args)
             {
                 var users = await _fido2Storage.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
-            };
+            }
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
