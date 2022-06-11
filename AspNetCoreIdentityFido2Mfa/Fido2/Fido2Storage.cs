@@ -37,7 +37,7 @@ public class Fido2Storage
         }
     }
 
-    public async Task<FidoStoredCredential> GetCredentialByIdAsync(byte[] id)
+    public async Task<FidoStoredCredential?> GetCredentialByIdAsync(byte[] id)
     {
         var credentialIdString = Base64Url.Encode(id);
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
@@ -61,8 +61,11 @@ public class Fido2Storage
         var cred = await _applicationDbContext.FidoStoredCredential
             .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
-        cred.SignatureCounter = counter;
-        await _applicationDbContext.SaveChangesAsync();
+        if(cred != null)
+        {
+            cred.SignatureCounter = counter;
+            await _applicationDbContext.SaveChangesAsync();
+        }
     }
 
     public async Task AddCredentialToUserAsync(Fido2User user, FidoStoredCredential credential)
