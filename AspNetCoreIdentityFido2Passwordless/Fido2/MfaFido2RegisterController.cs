@@ -107,13 +107,13 @@ public class MfaFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 2. Create callback so that lib can verify credential id is unique to this user
-            IsCredentialIdUniqueToUserAsyncDelegate callback = async (IsCredentialIdUniqueToUserParams args) =>
+            async Task<bool> callback(IsCredentialIdUniqueToUserParams args)
             {
                 var users = await _fido2Storage.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
-            };
+            }
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
