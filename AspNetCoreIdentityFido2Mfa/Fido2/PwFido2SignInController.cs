@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Fido2NetLib.Objects;
 using Fido2NetLib;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -15,7 +10,7 @@ namespace Fido2Identity;
 [Route("api/[controller]")]
 public class PwFido2SignInController : Controller
 {
-    private Fido2 _lib;
+    private readonly Fido2 _lib;
     public static IMetadataService _mds;
     private readonly Fido2Storage _fido2Storage;
     private readonly UserManager<IdentityUser> _userManager;
@@ -43,7 +38,7 @@ public class PwFido2SignInController : Controller
         });
     }
 
-    private string FormatException(Exception e)
+    private static string FormatException(Exception e)
     {
         return string.Format("{0}{1}", e.Message, e.InnerException != null ? " (" + e.InnerException.Message + ")" : "");
     }

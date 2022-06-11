@@ -19,23 +19,23 @@ public class FidoStoredCredential
     /// <summary>
     /// Gets or sets the user name for this user.
     /// </summary>
-    public virtual string UserName { get; set; }
+    public virtual string? UserName { get; set; }
 
-    public virtual byte[] UserId { get; set; }
+    public virtual byte[]? UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the public key for this user.
     /// </summary>
-    public virtual byte[] PublicKey { get; set; }
+    public virtual byte[]? PublicKey { get; set; }
 
     /// <summary>
     /// Gets or sets the user handle for this user.
     /// </summary>
-    public virtual byte[] UserHandle { get; set; }
+    public virtual byte[]? UserHandle { get; set; }
 
     public virtual uint SignatureCounter { get; set; }
 
-    public virtual string CredType { get; set; }
+    public virtual string? CredType { get; set; }
     
     /// <summary>
     /// Gets or sets the registration date for this user.
@@ -51,11 +51,11 @@ public class FidoStoredCredential
     public virtual Guid AaGuid { get; set; }
 
     [NotMapped]
-    public PublicKeyCredentialDescriptor Descriptor
+    public PublicKeyCredentialDescriptor? Descriptor
     {
         get { return string.IsNullOrWhiteSpace(DescriptorJson) ? null : JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(DescriptorJson); }
         set { DescriptorJson = JsonConvert.SerializeObject(value); }
     }
 
-    public virtual string DescriptorJson { get; set; }
+    public virtual string? DescriptorJson { get; set; }
 }
