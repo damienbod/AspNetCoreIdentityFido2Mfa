@@ -6,8 +6,6 @@ using static Fido2NetLib.Fido2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Fido2Identity;
 
 [Route("api/[controller]")]
@@ -18,7 +16,6 @@ public class MfaFido2RegisterController : Controller
     private readonly Fido2Storage _fido2Storage;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
-
 
     public MfaFido2RegisterController(
         Fido2Storage fido2Storage,
@@ -68,7 +65,8 @@ public class MfaFido2RegisterController : Controller
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
             foreach (var publicKeyCredentialDescriptor in items)
             {
-                existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                if(publicKeyCredentialDescriptor.Descriptor != null)
+                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
             }
 
             // 3. Create options

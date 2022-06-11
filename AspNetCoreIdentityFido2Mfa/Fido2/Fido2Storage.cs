@@ -1,11 +1,7 @@
 ﻿using AspNetCoreIdentityFido2Mfa.Data;
 using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Fido2Identity;
 
@@ -43,14 +39,18 @@ public class Fido2Storage
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
         var cred = await _applicationDbContext.FidoStoredCredential
-            .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
+            .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString))
+            .FirstOrDefaultAsync();
 
         return cred;
     }
 
     public Task<ICollection<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
     {
-        return Task.FromResult<ICollection<FidoStoredCredential>>(_applicationDbContext.FidoStoredCredential.Where(c => c.UserHandle.SequenceEqual(userHandle)).ToList());
+        return Task.FromResult<ICollection<FidoStoredCredential>>(
+            _applicationDbContext
+                .FidoStoredCredential.Where(c => c.UserHandle != null && c.UserHandle.SequenceEqual(userHandle))
+                .ToList());
     }
 
     public async Task UpdateCounterAsync(byte[] credentialId, uint counter)
@@ -59,7 +59,7 @@ public class Fido2Storage
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
         var cred = await _applicationDbContext.FidoStoredCredential
-            .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
+            .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
         if(cred != null)
         {
@@ -81,7 +81,7 @@ public class Fido2Storage
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
         var cred = await _applicationDbContext.FidoStoredCredential
-            .Where(c => c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
+            .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
         if (cred == null)
         {

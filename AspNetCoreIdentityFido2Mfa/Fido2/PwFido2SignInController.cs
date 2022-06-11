@@ -11,7 +11,6 @@ namespace Fido2Identity;
 public class PwFido2SignInController : Controller
 {
     private readonly Fido2 _lib;
-    public static IMetadataService _mds;
     private readonly Fido2Storage _fido2Storage;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
@@ -116,11 +115,11 @@ public class PwFido2SignInController : Controller
             var storedCounter = creds.SignatureCounter;
 
             // 4. Create callback to check if userhandle owns the credentialId
-            IsUserHandleOwnerOfCredentialIdAsync callback = async (args) =>
+            async Task<bool> callback(IsUserHandleOwnerOfCredentialIdParams args)
             {
                 var storedCreds = await _fido2Storage.GetCredentialsByUserHandleAsync(args.UserHandle);
                 return storedCreds.Any(c => c.Descriptor.Id.SequenceEqual(args.CredentialId));
-            };
+            }
 
             // 5. Make the assertion
             var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);

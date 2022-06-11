@@ -8,7 +8,7 @@ public class MfaModel : PageModel
 {
     public bool RememberMe { get; set; }
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
     public void OnGet()
     {
