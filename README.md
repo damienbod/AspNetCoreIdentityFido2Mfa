@@ -24,6 +24,8 @@ https://damienbod.com/2019/10/18/adding-fido2-passwordless-authentication-to-an-
 
 ## History
 
+2022-06-12 AspNetCoreIdentityFido2Mfa Migrate to latest identity, bootstrap 5, updated packages
+
 2022-02-13 Updated packages
 
 2021-12-16 Updated to .NET 6
