@@ -83,7 +83,7 @@ public class Fido2Storage
         var cred = await _applicationDbContext.FidoStoredCredential
             .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
-        if (cred == null)
+        if (cred == null || cred.UserId == null)
         {
             return new List<Fido2User>();
         }
@@ -97,5 +97,13 @@ public class Fido2Storage
                     Name = u.UserName,
                     Id = Encoding.UTF8.GetBytes(u.UserName) // byte representation of userID is required
                 }).ToListAsync();
+    }
+}
+
+public static class Fido2Extenstions
+{
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) where T : class
+    {
+        return enumerable.Where(e => e != null).Select(e => e!);
     }
 }
