@@ -67,7 +67,7 @@ public class MfaFido2SignInFidoController : Controller
 
                 // 2. Get registered credentials from database
                 var items = await _fido2Storage.GetCredentialsByUserNameAsync(identityUser.UserName);
-                existingCredentials = items.Select(c => c.Descriptor).ToList();
+                existingCredentials = items.Select(c => c.Descriptor).NotNull().ToList();
             }
 
             var exts = new AuthenticationExtensionsClientInputs() { SimpleTransactionAuthorization = "FIDO", GenericTransactionAuthorization = new TxAuthGenericArg { ContentType = "text/plain", Content = new byte[] { 0x46, 0x49, 0x44, 0x4F } }, UserVerificationIndex = true, Location = true, UserVerificationMethod = true };
