@@ -12,19 +12,19 @@ namespace Fido2Identity;
 public class PwFido2RegisterController : Controller
 {
     private readonly Fido2 _lib;
-    private readonly Fido2Storage _fido2Storage;
+    private readonly Fido2Store _fido2Store;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
 
 
     public PwFido2RegisterController(
-        Fido2Storage fido2Storage,
+        Fido2Store fido2Store,
         UserManager<IdentityUser> userManager,
         IOptions<Fido2Configuration> optionsFido2Configuration)
     {
         _userManager = userManager;
         _optionsFido2Configuration = optionsFido2Configuration;
-        _fido2Storage = fido2Storage;
+        _fido2Store = fido2Store;
 
         _lib = new Fido2(new Fido2Configuration()
         {
@@ -60,7 +60,7 @@ public class PwFido2RegisterController : Controller
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Storage.GetCredentialsByUserNameAsync(username);
+            var items = await _fido2Store.GetCredentialsByUserNameAsync(username);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
             foreach (var publicKeyCredentialDescriptor in items)
             {
@@ -108,7 +108,7 @@ public class PwFido2RegisterController : Controller
             // 2. Create callback so that lib can verify credential id is unique to this user
             async Task<bool> callback(IsCredentialIdUniqueToUserParams args)
             {
-                var users = await _fido2Storage.GetUsersByCredentialIdAsync(args.CredentialId);
+                var users = await _fido2Store.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
@@ -118,7 +118,7 @@ public class PwFido2RegisterController : Controller
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
             // 3. Store the credentials in db
-            await _fido2Storage.AddCredentialToUserAsync(options.User, new FidoStoredCredential
+            await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
             {
                 UserName = options.User.Name,
                 Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),

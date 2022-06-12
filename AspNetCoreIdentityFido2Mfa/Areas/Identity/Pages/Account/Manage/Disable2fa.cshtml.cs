@@ -16,15 +16,15 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<Disable2faModel> _logger;
-        private readonly Fido2Storage _fido2Storage;
+        private readonly Fido2Store _fido2Store;
 
         public Disable2faModel(
             UserManager<IdentityUser> userManager,
-            Fido2Storage fido2Storage,
+            Fido2Store fido2Store,
             ILogger<Disable2faModel> logger)
         {
             _userManager = userManager;
-            _fido2Storage = fido2Storage;
+            _fido2Store = fido2Store;
             _logger = logger;
         }
 
@@ -60,7 +60,7 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account.Manage
             }
 
             // remove Fido2 MFA if it exists
-            await _fido2Storage.RemoveCredentialsByUserNameAsync(user.UserName);
+            await _fido2Store.RemoveCredentialsByUserNameAsync(user.UserName);
 
             var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
