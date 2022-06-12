@@ -21,15 +21,15 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly Fido2Storage _fido2Storage;
+        private readonly Fido2Store _fido2Store;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<IdentityUser> signInManager,
-            Fido2Storage fido2Storage,
+            Fido2Store fido2Store,
             ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
-            _fido2Storage = fido2Storage;
+            _fido2Store = fido2Store;
             _logger = logger;
         }
 
@@ -124,7 +124,7 @@ namespace AspNetCoreIdentityFido2Mfa.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    var fido2ItemExistsForUser = await _fido2Storage.GetCredentialsByUserNameAsync(Input.Email);
+                    var fido2ItemExistsForUser = await _fido2Store.GetCredentialsByUserNameAsync(Input.Email);
                     if (fido2ItemExistsForUser.Count > 0)
                     {
                         return RedirectToPage("./LoginFido2Mfa", new { ReturnUrl = returnUrl, Input.RememberMe });

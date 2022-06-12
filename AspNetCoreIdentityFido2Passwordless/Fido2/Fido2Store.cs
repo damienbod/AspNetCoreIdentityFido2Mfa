@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Fido2Identity;
 
-public class Fido2Storage
+public class Fido2Store
 {
     private readonly ApplicationDbContext _applicationDbContext;
 
-    public Fido2Storage(ApplicationDbContext applicationDbContext)
+    public Fido2Store(ApplicationDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext;
     }

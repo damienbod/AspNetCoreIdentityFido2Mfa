@@ -30,7 +30,7 @@ builder.Services.AddControllers()
 builder.Services.AddRazorPages();
 
 builder.Services.Configure<Fido2Configuration>(builder.Configuration.GetSection("fido2"));
-builder.Services.AddScoped<Fido2Storage>();
+builder.Services.AddScoped<Fido2Store>();
 // Adds a default in-memory implementation of IDistributedCache.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

@@ -11,18 +11,18 @@ namespace Fido2Identity;
 public class MfaFido2SignInFidoController : Controller
 {
     private readonly Fido2 _lib;
-    private readonly Fido2Storage _fido2Storage;
+    private readonly Fido2Store _fido2Store;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
 
     public MfaFido2SignInFidoController(
-        Fido2Storage fido2Storage,
+        Fido2Store fido2Store,
         SignInManager<IdentityUser> signInManager,
         IOptions<Fido2Configuration> optionsFido2Configuration)
     {
         _optionsFido2Configuration = optionsFido2Configuration;
         _signInManager = signInManager;
-        _fido2Storage = fido2Storage;
+        _fido2Store = fido2Store;
 
         _lib = new Fido2(new Fido2Configuration()
         {
@@ -66,7 +66,7 @@ public class MfaFido2SignInFidoController : Controller
                 if (user == null) throw new ArgumentException("Username was not registered");
 
                 // 2. Get registered credentials from database
-                var items = await _fido2Storage.GetCredentialsByUserNameAsync(identityUser.UserName);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
                 existingCredentials = items.Select(c => c.Descriptor).NotNull().ToList();
             }
 
@@ -105,7 +105,7 @@ public class MfaFido2SignInFidoController : Controller
             var options = AssertionOptions.FromJson(jsonOptions);
 
             // 2. Get registered credential from database
-            var creds = await _fido2Storage.GetCredentialByIdAsync(clientResponse.Id);
+            var creds = await _fido2Store.GetCredentialByIdAsync(clientResponse.Id);
 
             if (creds == null)
             {
@@ -118,7 +118,7 @@ public class MfaFido2SignInFidoController : Controller
             // 4. Create callback to check if userhandle owns the credentialId
             async Task<bool> callback(IsUserHandleOwnerOfCredentialIdParams args)
             {
-                var storedCreds = await _fido2Storage.GetCredentialsByUserHandleAsync(args.UserHandle);
+                var storedCreds = await _fido2Store.GetCredentialsByUserHandleAsync(args.UserHandle);
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
             }
 
@@ -126,7 +126,7 @@ public class MfaFido2SignInFidoController : Controller
             var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
 
             // 6. Store the updated counter
-            await _fido2Storage.UpdateCounterAsync(res.CredentialId, res.Counter);
+            await _fido2Store.UpdateCounterAsync(res.CredentialId, res.Counter);
 
             // complete sign-in
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
