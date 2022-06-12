@@ -4,7 +4,7 @@
 @inject UserManager<IdentityUser> UserManager
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @functions{
-    public string GetAntiXsrfRequestToken()
+    public string? GetAntiXsrfRequestToken()
     {
         return Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken;
     }
@@ -34,7 +34,7 @@
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="form-control" type="text" readonly placeholder="email" value="@User.Identity.Name" name="username" required>
+                            <input class="form-control" type="text" readonly placeholder="email" value="@User.Identity?.Name" name="username" required>
                         </div>
                     </div>
 
