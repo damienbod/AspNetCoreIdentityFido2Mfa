@@ -24,8 +24,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     //    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
 });
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson();
+builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();
 

@@ -1,6 +1,6 @@
 ﻿using Fido2NetLib.Objects;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace Fido2Identity;
 
@@ -52,8 +52,8 @@ public class FidoStoredCredential
     [NotMapped]
     public PublicKeyCredentialDescriptor? Descriptor
     {
-        get { return string.IsNullOrWhiteSpace(DescriptorJson) ? null : JsonConvert.DeserializeObject<PublicKeyCredentialDescriptor>(DescriptorJson); }
-        set { DescriptorJson = JsonConvert.SerializeObject(value); }
+        get { return string.IsNullOrWhiteSpace(DescriptorJson) ? null : JsonSerializer.Deserialize<PublicKeyCredentialDescriptor>(DescriptorJson); }
+        set { DescriptorJson = JsonSerializer.Serialize(value); }
     }
 
     public virtual string? DescriptorJson { get; set; }
