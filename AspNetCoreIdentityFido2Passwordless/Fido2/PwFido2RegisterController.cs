@@ -30,7 +30,7 @@ public class PwFido2RegisterController : Controller
         {
             ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
             ServerName = _optionsFido2Configuration.Value.ServerName,
-            Origin = _optionsFido2Configuration.Value.Origin,
+            Origins = new HashSet<string> { _optionsFido2Configuration.Value.Origin },
             TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
         });
     }
@@ -78,7 +78,11 @@ public class PwFido2RegisterController : Controller
             if (!string.IsNullOrEmpty(authType))
                 authenticatorSelection.AuthenticatorAttachment = authType.ToEnum<AuthenticatorAttachment>();
 
-            var exts = new AuthenticationExtensionsClientInputs() { Extensions = true, UserVerificationIndex = true, Location = true, UserVerificationMethod = true, BiometricAuthenticatorPerformanceBounds = new AuthenticatorBiometricPerfBounds { FAR = float.MaxValue, FRR = float.MaxValue } };
+            var exts = new AuthenticationExtensionsClientInputs
+            {
+                Extensions = true,
+                UserVerificationMethod = true,
+            };
 
             var options = _lib.RequestNewCredential(user, existingKeys, authenticatorSelection, attType.ToEnum<AttestationConveyancePreference>(), exts);
 
@@ -106,13 +110,13 @@ public class PwFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 2. Create callback so that lib can verify credential id is unique to this user
-            async Task<bool> callback(IsCredentialIdUniqueToUserParams args)
+            IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
             {
                 var users = await _fido2Store.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
-            }
+            };
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
@@ -137,7 +141,9 @@ public class PwFido2RegisterController : Controller
 
             if (user == null)
             {
-                return Json(new CredentialMakeResult { Status = "error", ErrorMessage = $"Unable to load user with ID '{_userManager.GetUserId(User)}'." });
+                return Json(new CredentialMakeResult("error",
+                    $"Unable to load user with ID '{_userManager.GetUserId(User)}'.", 
+                    success.Result ));
             }
 
             //await _userManager.SetTwoFactorEnabledAsync(user, true);
@@ -147,7 +153,7 @@ public class PwFido2RegisterController : Controller
         }
         catch (Exception e)
         {
-            return Json(new CredentialMakeResult { Status = "error", ErrorMessage = FormatException(e) });
+            return Json(new CredentialMakeResult("error", FormatException(e), null));
         }
     }
 

@@ -28,7 +28,7 @@ public class MfaFido2SignInFidoController : Controller
         {
             ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
             ServerName = _optionsFido2Configuration.Value.ServerName,
-            Origin = _optionsFido2Configuration.Value.Origin,
+            Origins = new HashSet<string> { _optionsFido2Configuration.Value.Origin },
             TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
         });
     }
@@ -70,8 +70,10 @@ public class MfaFido2SignInFidoController : Controller
                 existingCredentials = items.Select(c => c.Descriptor).NotNull().ToList();
             }
 
-            var exts = new AuthenticationExtensionsClientInputs() { SimpleTransactionAuthorization = "FIDO", GenericTransactionAuthorization = new TxAuthGenericArg { ContentType = "text/plain", Content = new byte[] { 0x46, 0x49, 0x44, 0x4F } }, UserVerificationIndex = true, Location = true, UserVerificationMethod = true };
-
+            var exts = new AuthenticationExtensionsClientInputs
+            {
+                UserVerificationMethod = true,
+            };
             // 3. Create options
             var uv = string.IsNullOrEmpty(userVerification) ? UserVerificationRequirement.Discouraged : userVerification.ToEnum<UserVerificationRequirement>();
             var options = _lib.GetAssertionOptions(
@@ -116,11 +118,11 @@ public class MfaFido2SignInFidoController : Controller
             var storedCounter = creds.SignatureCounter;
 
             // 4. Create callback to check if userhandle owns the credentialId
-            async Task<bool> callback(IsUserHandleOwnerOfCredentialIdParams args)
+            IsUserHandleOwnerOfCredentialIdAsync callback = async (args, cancellationToken) =>
             {
                 var storedCreds = await _fido2Store.GetCredentialsByUserHandleAsync(args.UserHandle);
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
-            }
+            };
 
             // 5. Make the assertion
             var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
