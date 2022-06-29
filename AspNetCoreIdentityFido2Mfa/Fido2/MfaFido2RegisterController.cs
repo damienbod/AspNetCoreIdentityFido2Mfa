@@ -113,29 +113,32 @@ public class MfaFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 2. Create callback so that lib can verify credential id is unique to this user
-            IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
+            async Task<bool> callback(IsCredentialIdUniqueToUserParams args, CancellationToken cancellationToken)
             {
                 var users = await _fido2Store.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
-            };
+            }
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
-            // 3. Store the credentials in db
-            await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
+            if(success.Result != null)
             {
-                UserName = options.User.Name,
-                Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
-                PublicKey = success.Result.PublicKey,
-                UserHandle = success.Result.User.Id,
-                SignatureCounter = success.Result.Counter,
-                CredType = success.Result.CredType,
-                RegDate = DateTime.Now,
-                AaGuid = success.Result.Aaguid
-            });
+                // 3. Store the credentials in db
+                await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
+                {
+                    UserName = options.User.Name,
+                    Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),
+                    PublicKey = success.Result.PublicKey,
+                    UserHandle = success.Result.User.Id,
+                    SignatureCounter = success.Result.Counter,
+                    CredType = success.Result.CredType,
+                    RegDate = DateTime.Now,
+                    AaGuid = success.Result.Aaguid
+                });
+            }
 
             // 4. return "ok" to the client
 

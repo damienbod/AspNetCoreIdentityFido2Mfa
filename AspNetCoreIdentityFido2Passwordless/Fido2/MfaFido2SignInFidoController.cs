@@ -118,11 +118,11 @@ public class MfaFido2SignInFidoController : Controller
             var storedCounter = creds.SignatureCounter;
 
             // 4. Create callback to check if userhandle owns the credentialId
-            IsUserHandleOwnerOfCredentialIdAsync callback = async (args, cancellationToken) =>
+            async Task<bool> callback(IsUserHandleOwnerOfCredentialIdParams args, CancellationToken cancellationToken)
             {
                 var storedCreds = await _fido2Store.GetCredentialsByUserHandleAsync(args.UserHandle);
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
-            };
+            }
 
             if (creds.PublicKey == null)
             {
