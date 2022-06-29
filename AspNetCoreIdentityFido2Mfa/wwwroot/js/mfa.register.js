@@ -54,7 +54,9 @@ async function handleRegisterSubmit(event) {
         return c;
     });
 
-    if (makeCredentialOptions.authenticatorSelection.authenticatorAttachment === null) makeCredentialOptions.authenticatorSelection.authenticatorAttachment = undefined;
+    if (makeCredentialOptions.authenticatorSelection.authenticatorAttachment === null) {
+        makeCredentialOptions.authenticatorSelection.authenticatorAttachment = undefined;
+    }
 
     //console.log("Credential Options Formatted", makeCredentialOptions);
 
