@@ -131,11 +131,7 @@ public class PwFido2SignInController : Controller
 
             // 5. Make the assertion
             var res = await _lib.MakeAssertionAsync(
-                clientResponse, 
-                options, 
-                creds.PublicKey, 
-                storedCounter, 
-                callback);
+                clientResponse, options, creds.PublicKey, storedCounter, callback);
 
             // 6. Store the updated counter
             await _fido2Store.UpdateCounterAsync(res.CredentialId, res.Counter);

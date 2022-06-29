@@ -124,8 +124,14 @@ public class MfaFido2SignInFidoController : Controller
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
             };
 
+            if (creds.PublicKey == null)
+            {
+                throw new InvalidOperationException($"No public key");
+            }
+
             // 5. Make the assertion
-            var res = await _lib.MakeAssertionAsync(clientResponse, options, creds.PublicKey, storedCounter, callback);
+            var res = await _lib.MakeAssertionAsync(
+                clientResponse, options, creds.PublicKey, storedCounter, callback);
 
             // 6. Store the updated counter
             await _fido2Store.UpdateCounterAsync(res.CredentialId, res.Counter);
