@@ -17,8 +17,6 @@ async function handleRegisterSubmit(event) {
     // possible values: true,false
     let require_resident_key = false;
 
-
-
     // prepare form post data
     var data = new FormData();
     data.append('username', username);
@@ -38,7 +36,6 @@ async function handleRegisterSubmit(event) {
         let msg = "Something wen't really wrong";
         showErrorAlert(msg);
     }
-
 
     console.log("Credential Options Object", makeCredentialOptions);
 

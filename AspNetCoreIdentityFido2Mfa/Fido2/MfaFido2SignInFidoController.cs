@@ -28,7 +28,7 @@ public class MfaFido2SignInFidoController : Controller
         {
             ServerDomain = _optionsFido2Configuration.Value.ServerDomain,
             ServerName = _optionsFido2Configuration.Value.ServerName,
-            Origins = new HashSet<string> { _optionsFido2Configuration.Value.Origin },
+            Origins = _optionsFido2Configuration.Value.Origins,
             TimestampDriftTolerance = _optionsFido2Configuration.Value.TimestampDriftTolerance
         });
     }
