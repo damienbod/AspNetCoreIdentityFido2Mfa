@@ -7,7 +7,7 @@ namespace Fido2Identity;
 /// <summary>
 /// Represents a WebAuthn credential.
 /// </summary>
-public class FidoStoredCredential
+public class FidoCredential
 {
     /// <summary>
     /// Gets or sets the primary key for this user.

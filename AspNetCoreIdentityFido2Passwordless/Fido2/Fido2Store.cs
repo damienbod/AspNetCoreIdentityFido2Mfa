@@ -14,42 +14,42 @@ public class Fido2Store
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUserNameAsync(string username)
+    public async Task<ICollection<FidoCredential>> GetCredentialsByUserNameAsync(string username)
     {
-        return await _applicationDbContext.FidoStoredCredential.Where(c => c.UserName == username).ToListAsync();
+        return await _applicationDbContext.FidoCredentials.Where(c => c.UserName == username).ToListAsync();
     }
 
     public async Task RemoveCredentialsByUserNameAsync(string username)
     {
-        var items = await _applicationDbContext.FidoStoredCredential.Where(c => c.UserName == username).ToListAsync();
+        var items = await _applicationDbContext.FidoCredentials.Where(c => c.UserName == username).ToListAsync();
         if (items != null)
         {
             foreach (var fido2Key in items)
             {
-                _applicationDbContext.FidoStoredCredential.Remove(fido2Key);
+                _applicationDbContext.FidoCredentials.Remove(fido2Key);
             };
 
             await _applicationDbContext.SaveChangesAsync();
         }
     }
 
-    public async Task<FidoStoredCredential?> GetCredentialByIdAsync(byte[] id)
+    public async Task<FidoCredential?> GetCredentialByIdAsync(byte[] id)
     {
         var credentialIdString = Base64Url.Encode(id);
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
-        var cred = await _applicationDbContext.FidoStoredCredential
+        var cred = await _applicationDbContext.FidoCredentials
             .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString))
             .FirstOrDefaultAsync();
 
         return cred;
     }
 
-    public Task<ICollection<FidoStoredCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
+    public Task<ICollection<FidoCredential>> GetCredentialsByUserHandleAsync(byte[] userHandle)
     {
-        return Task.FromResult<ICollection<FidoStoredCredential>>(
+        return Task.FromResult<ICollection<FidoCredential>>(
             _applicationDbContext
-                .FidoStoredCredential.Where(c => c.UserHandle != null && c.UserHandle.SequenceEqual(userHandle))
+                .FidoCredentials.Where(c => c.UserHandle != null && c.UserHandle.SequenceEqual(userHandle))
                 .ToList());
     }
 
@@ -58,7 +58,7 @@ public class Fido2Store
         var credentialIdString = Base64Url.Encode(credentialId);
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
-        var cred = await _applicationDbContext.FidoStoredCredential
+        var cred = await _applicationDbContext.FidoCredentials
             .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
         if(cred != null)
@@ -68,10 +68,10 @@ public class Fido2Store
         }
     }
 
-    public async Task AddCredentialToUserAsync(Fido2User user, FidoStoredCredential credential)
+    public async Task AddCredentialToUserAsync(Fido2User user, FidoCredential credential)
     {
         credential.UserId = user.Id;
-        _applicationDbContext.FidoStoredCredential.Add(credential);
+        _applicationDbContext.FidoCredentials.Add(credential);
         await _applicationDbContext.SaveChangesAsync();
     }
 
@@ -80,7 +80,7 @@ public class Fido2Store
         var credentialIdString = Base64Url.Encode(credentialId);
         //byte[] credentialIdStringByte = Base64Url.Decode(credentialIdString);
 
-        var cred = await _applicationDbContext.FidoStoredCredential
+        var cred = await _applicationDbContext.FidoCredentials
             .Where(c => c.DescriptorJson != null && c.DescriptorJson.Contains(credentialIdString)).FirstOrDefaultAsync();
 
         if (cred == null || cred.UserId == null)

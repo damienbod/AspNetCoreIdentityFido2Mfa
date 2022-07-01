@@ -11,11 +11,11 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-    public DbSet<FidoStoredCredential> FidoStoredCredential => Set<FidoStoredCredential>();
+    public DbSet<FidoCredential> FidoCredentials => Set<FidoCredential>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<FidoStoredCredential>().HasKey(m => m.Id);
+        builder.Entity<FidoCredential>().HasKey(m => m.Id);
 
         base.OnModelCreating(builder);
     }

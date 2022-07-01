@@ -21,7 +21,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Fido2Identity.FidoStoredCredential", b =>
+            modelBuilder.Entity("Fido2Identity.FidoCredentials", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FidoStoredCredential");
+                    b.ToTable("FidoCredentials");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
