@@ -38,8 +38,8 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                     b.Property<byte[]>("PublicKey")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<DateTime>("RegDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("RegDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<long>("SignatureCounter")
                         .HasColumnType("bigint");

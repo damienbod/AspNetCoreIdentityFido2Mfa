@@ -58,7 +58,7 @@ namespace AspNetCoreIdentityFido2Mfa.Migrations
                     UserHandle = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     SignatureCounter = table.Column<long>(type: "bigint", nullable: false),
                     CredType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RegDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RegDate = table.Column<DateTimeOffset>(type: "datetime2", nullable: false),
                     AaGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DescriptorJson = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
