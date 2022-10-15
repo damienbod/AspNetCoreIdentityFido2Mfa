@@ -20,6 +20,7 @@ Update-Database
 
 ## History
 
+- 2022-10-15 Updated nuget packages
 - 2022-07-31 Updated Fido2 nuget package to 3.0.0 and npm, nuget packages
 - 2022-06-29 Updated Fido2 nuget package to 3.0.0-beta6
 - 2022-06-12 Migrate to latest identity, bootstrap 5, updated packages, nullable, implicit usings
