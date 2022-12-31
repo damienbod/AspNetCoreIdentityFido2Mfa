@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityFido2Passwordless.Data;
+﻿using AspNetCoreIdentityFido2Mfa.Data;
 using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -89,7 +89,7 @@ public class Fido2Store
         }
 
         return await _applicationDbContext.Users
-                .Where(u => u.UserName != null && Encoding.UTF8.GetBytes(u.UserName)
+                .Where(u => u.UserName != null && Fido2Store.GetUserNameInBytes(u.UserName)
                 .SequenceEqual(cred.UserId))
                 .Select(u => new Fido2User
                 {
@@ -101,7 +101,7 @@ public class Fido2Store
 
     public static byte[] GetUserNameInBytes(string? userName)
     {
-        if (userName != null)
+        if(userName != null)
         {
             return Encoding.UTF8.GetBytes(userName);
         }
