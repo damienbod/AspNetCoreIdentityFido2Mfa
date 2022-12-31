@@ -89,7 +89,7 @@ public class Fido2Store
         }
 
         return await _applicationDbContext.Users
-                .Where(u => Encoding.UTF8.GetBytes(u.UserName)
+                .Where(u => u.UserName != null && Encoding.UTF8.GetBytes(u.UserName)
                 .SequenceEqual(cred.UserId))
                 .Select(u => new Fido2User
                 {

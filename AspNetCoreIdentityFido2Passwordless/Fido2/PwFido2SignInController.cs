@@ -57,7 +57,7 @@ public class PwFido2SignInController : Controller
                 var identityUser = await _userManager.FindByNameAsync(username);
                 var user = new Fido2User
                 {
-                    DisplayName = identityUser.UserName,
+                    DisplayName = identityUser!.UserName,
                     Name = identityUser.UserName,
                     Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
                 };
