@@ -30,7 +30,7 @@ async function handleSignInSubmit(event) {
         showErrorAlert("Request to server failed", e);
     }
 
-    console.log("Assertion Options Object", makeAssertionOptions);
+    //console.log("Assertion Options Object", makeAssertionOptions);
 
     // show options error to user
     if (makeAssertionOptions.status !== "ok") {
@@ -50,7 +50,7 @@ async function handleSignInSubmit(event) {
         listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
     });
 
-    console.log("Assertion options", makeAssertionOptions);
+    //console.log("Assertion options", makeAssertionOptions);
 
     Swal.fire({
         title: 'Logging In...',
@@ -85,7 +85,6 @@ async function verifyAssertionWithServer(assertedCredential) {
     let rawId = new Uint8Array(assertedCredential.rawId);
     let sig = new Uint8Array(assertedCredential.response.signature);
     let userHandle = new Uint8Array(assertedCredential.response.userHandle);
-    console.warn(userHandle);
     const data = {
         id: assertedCredential.id,
         rawId: coerceToBase64Url(rawId),
@@ -94,7 +93,7 @@ async function verifyAssertionWithServer(assertedCredential) {
         response: {
             authenticatorData: coerceToBase64Url(authData),
             clientDataJson: coerceToBase64Url(clientDataJSON),
-            userHandle: userHandle !== null ? coerceToBase64Url(userHandle) : null,
+            //userHandle: userHandle !== null ? coerceToBase64Url(userHandle) : null,
             signature: coerceToBase64Url(sig)
         }
     };
@@ -117,7 +116,7 @@ async function verifyAssertionWithServer(assertedCredential) {
         throw e;
     }
 
-    console.log("Assertion Object", response);
+    //console.log("Assertion Object", response);
 
     // show error
     if (response.status !== "ok") {
