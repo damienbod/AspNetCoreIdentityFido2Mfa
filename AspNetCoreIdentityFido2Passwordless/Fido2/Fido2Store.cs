@@ -14,7 +14,7 @@ public class Fido2Store
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUserNameAsync(string username)
+    public async Task<ICollection<FidoStoredCredential>> GetCredentialsByUserNameAsync(string? username)
     {
         return await _applicationDbContext.FidoStoredCredential.Where(c => c.UserName == username).ToListAsync();
     }
