@@ -12,7 +12,6 @@ namespace Fido2Identity;
 public class MfaFido2RegisterController : Controller
 {
     private readonly Fido2 _lib;
-    public static IMetadataService? _mds;
     private readonly Fido2Store _fido2Store;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
@@ -55,18 +54,21 @@ public class MfaFido2RegisterController : Controller
             var identityUser = await _userManager.FindByEmailAsync(username);
             var user = new Fido2User
             {
-                DisplayName = identityUser.UserName,
+                DisplayName = identityUser!.UserName,
                 Name = identityUser.UserName,
-                Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
-            foreach (var publicKeyCredentialDescriptor in items)
+            if (identityUser.UserName != null)
             {
-                if(publicKeyCredentialDescriptor.Descriptor != null)
-                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);         
+                foreach (var publicKeyCredentialDescriptor in items)
+                {
+                    if (publicKeyCredentialDescriptor.Descriptor != null)
+                        existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                }
             }
 
             // 3. Create options

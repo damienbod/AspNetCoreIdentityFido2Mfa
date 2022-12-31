@@ -12,7 +12,6 @@ namespace Fido2Identity;
 public class MfaFido2RegisterController : Controller
 {
     private readonly Fido2 _lib;
-    public static IMetadataService? _mds;
     private readonly Fido2Store _fido2Store;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
@@ -55,18 +54,21 @@ public class MfaFido2RegisterController : Controller
             var identityUser = await _userManager.FindByEmailAsync(username);
             var user = new Fido2User
             {
-                DisplayName = identityUser.UserName,
+                DisplayName = identityUser!.UserName,
                 Name = identityUser.UserName,
-                Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
-            foreach (var publicKeyCredentialDescriptor in items)
+            if (identityUser.UserName != null)
             {
-                if(publicKeyCredentialDescriptor.Descriptor != null)
-                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);         
+                foreach (var publicKeyCredentialDescriptor in items)
+                {
+                    if (publicKeyCredentialDescriptor.Descriptor != null)
+                        existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                }
             }
 
             // 3. Create options
@@ -85,7 +87,9 @@ public class MfaFido2RegisterController : Controller
                 UserVerificationMethod = true, 
             };
 
-            var options = _lib.RequestNewCredential(user, existingKeys, authenticatorSelection, attType.ToEnum<AttestationConveyancePreference>(), exts);
+            var options = _lib.RequestNewCredential(
+                user, existingKeys, 
+                authenticatorSelection, attType.ToEnum<AttestationConveyancePreference>(), exts);
 
             // 4. Temporarily store options, session/in-memory cache/redis/db
             HttpContext.Session.SetString("fido2.attestationOptions", options.ToJson());
@@ -111,18 +115,18 @@ public class MfaFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 2. Create callback so that lib can verify credential id is unique to this user
-            IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
+            async Task<bool> callback(IsCredentialIdUniqueToUserParams args, CancellationToken cancellationToken)
             {
                 var users = await _fido2Store.GetUsersByCredentialIdAsync(args.CredentialId);
                 if (users.Count > 0) return false;
 
                 return true;
-            };
+            }
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
 
-            if (success.Result != null)
+            if(success.Result != null)
             {
                 // 3. Store the credentials in db
                 await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
