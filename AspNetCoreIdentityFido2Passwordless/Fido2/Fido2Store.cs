@@ -1,4 +1,4 @@
-﻿using AspNetCoreIdentityFido2Mfa.Data;
+﻿using AspNetCoreIdentityFido2Passwordless.Data;
 using Fido2NetLib;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
