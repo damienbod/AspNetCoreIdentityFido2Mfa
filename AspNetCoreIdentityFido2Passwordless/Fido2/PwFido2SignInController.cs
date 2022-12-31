@@ -59,7 +59,7 @@ public class PwFido2SignInController : Controller
                 {
                     DisplayName = identityUser!.UserName,
                     Name = identityUser.UserName,
-                    Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                    Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
                 };
 
                 if (user == null) throw new ArgumentException("Username was not registered");

@@ -57,7 +57,7 @@ public class MfaFido2RegisterController : Controller
             {
                 DisplayName = identityUser!.UserName,
                 Name = identityUser.UserName,
-                Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
             };
 
             // 2. Get user existing keys by username

@@ -95,8 +95,18 @@ public class Fido2Store
                 {
                     DisplayName = u.UserName,
                     Name = u.UserName,
-                    Id = Encoding.UTF8.GetBytes(u.UserName) // byte representation of userID is required
+                    Id = GetUserNameInBytes(u.UserName) // byte representation of userID is required
                 }).ToListAsync();
+    }
+
+    public static byte[] GetUserNameInBytes(string? userName)
+    {
+        if (userName != null)
+        {
+            return Encoding.UTF8.GetBytes(userName);
+        }
+
+        throw new ArgumentNullException(nameof(userName));
     }
 }
 

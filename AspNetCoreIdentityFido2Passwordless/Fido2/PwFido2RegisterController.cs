@@ -56,7 +56,7 @@ public class PwFido2RegisterController : Controller
             {
                 DisplayName = displayName,
                 Name = username,
-                Id = Encoding.UTF8.GetBytes(username) // byte representation of userID is required
+                Id = Fido2Store.GetUserNameInBytes(username) // byte representation of userID is required
             };
 
             // 2. Get user existing keys by username
