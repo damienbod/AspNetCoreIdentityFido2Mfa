@@ -60,12 +60,15 @@ public class MfaFido2RegisterController : Controller
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
-            foreach (var publicKeyCredentialDescriptor in items)
+            if (identityUser.UserName != null)
             {
-                if(publicKeyCredentialDescriptor.Descriptor != null)
-                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);         
+                foreach (var publicKeyCredentialDescriptor in items)
+                {
+                    if (publicKeyCredentialDescriptor.Descriptor != null)
+                        existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                }
             }
 
             // 3. Create options

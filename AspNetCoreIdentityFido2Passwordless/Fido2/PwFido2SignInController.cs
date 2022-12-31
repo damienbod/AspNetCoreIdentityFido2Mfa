@@ -109,7 +109,7 @@ public class PwFido2SignInController : Controller
             // 2. Get registered credential from database
             var creds = await _fido2Store.GetCredentialByIdAsync(clientResponse.Id);
 
-            if (creds == null)
+            if (creds == null && creds!.UserName == null)
             {
                 throw new Exception("Unknown credentials");
             }
