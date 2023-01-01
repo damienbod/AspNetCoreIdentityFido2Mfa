@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AspNetCoreIdentityFido2Mfa.Pages
+namespace AspNetCoreIdentityFido2Mfa.Pages;
+
+public class PrivacyModel : PageModel
 {
-    public class PrivacyModel : PageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-        }
     }
 }
