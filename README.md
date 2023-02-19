@@ -20,6 +20,7 @@ Update-Database
 
 ## History
 
+- 2023-02-18 Updated packages, fiimproved passwordless login
 - 2022-12-31 Updated to .NET 7, fix passwordless login
 - 2022-10-15 Updated nuget packages
 - 2022-07-31 Updated Fido2 nuget package to 3.0.0 and npm, nuget packages

@@ -109,6 +109,15 @@ public class PwFido2RegisterController : Controller
             var jsonOptions = HttpContext.Session.GetString("fido2.attestationOptions");
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
+            // 1b. find or create the user
+            var user = await CreateOrFindUser(options.User.Name);
+            if (user == null)
+            {
+                return Json(new CredentialMakeResult("error",
+                    $"Unable to load user with ID '{options.User.Name}'.",
+                    null));
+            }
+
             // 2. Create callback so that lib can verify credential id is unique to this user
             IsCredentialIdUniqueToUserAsyncDelegate callback = async (args, cancellationToken) =>
             {
@@ -120,8 +129,7 @@ public class PwFido2RegisterController : Controller
 
             // 2. Verify and make the credentials
             var success = await _lib.MakeNewCredentialAsync(attestationResponse, options, callback);
-
-            if(success.Result != null)
+            if (success.Result != null)
             {
                 // 3. Store the credentials in db
                 await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
@@ -137,21 +145,6 @@ public class PwFido2RegisterController : Controller
                 });
             }
 
-            // 4. return "ok" to the client
-
-            var user = await CreateUser(options.User.Name);
-            // await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return Json(new CredentialMakeResult("error",
-                    $"Unable to load user with ID '{_userManager.GetUserId(User)}'.", 
-                    success.Result ));
-            }
-
-            //await _userManager.SetTwoFactorEnabledAsync(user, true);
-            //var userId = await _userManager.FindByNameAsync(user);
-
             return Json(success);
         }
         catch (Exception e)
@@ -160,15 +153,32 @@ public class PwFido2RegisterController : Controller
         }
     }
 
-    private async Task<IdentityUser> CreateUser(string userEmail)
+    private async Task<IdentityUser?> CreateOrFindUser(string userEmail)
     {
-        var user = new IdentityUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true };
+        var user = new IdentityUser { UserName = userEmail, Email = userEmail, EmailConfirmed = false };
+
         var result = await _userManager.CreateAsync(user);
         if (result.Succeeded)
         {
-            //await _signInManager.SignInAsync(user, isPersistent: false);
+            // new user created
+            return user;
         }
-
-        return user;
+        else
+        {
+            try
+            {
+                if (result.Errors.Single(e => e.Code.Equals("DuplicateUserName")) != null)
+                {
+                    // user already exists, which is OK for our purposes
+                    return user;
+                }
+            }
+            catch (Exception)
+            {
+                // other error (e.g. malformed username)
+                return null;
+            }
+        }
+        return null;
     }
 }
