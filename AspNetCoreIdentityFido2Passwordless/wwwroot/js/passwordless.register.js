@@ -70,7 +70,7 @@ async function handleRegisterSubmit(event) {
     Swal.fire({
         title: 'Registering...',
         text: 'Tap your security key to finish registration.',
-        imageUrl: "/images/securitykey.min.svg",
+        imageUrl: getFolder() + "/images/securitykey.min.svg",
         showCancelButton: true,
         showConfirmButton: false,
         focusConfirm: false,
@@ -104,7 +104,7 @@ async function handleRegisterSubmit(event) {
 async function fetchMakeCredentialOptions(formData) {
     id = "RequestVerificationToken" 
 
-    let response = await fetch('/pwmakeCredentialOptions', {
+    let response = await fetch(getFolder() + '/pwmakeCredentialOptions', {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
@@ -167,7 +167,7 @@ async function registerNewCredential(newCredential) {
 }
 
 async function registerCredentialWithServer(formData) {
-    let response = await fetch('/pwmakeCredential', {
+    let response = await fetch(getFolder() + '/pwmakeCredential', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {
@@ -180,4 +180,18 @@ async function registerCredentialWithServer(formData) {
     let data = await response.json();
 
     return data;
+}
+
+/**
+* 
+* Get application deployment folder
+* empty string if root
+* */
+function getFolder() {
+    var dir = "";
+    try {
+        dir = document.getElementById('BasePath').value;
+    } catch (e) {
+    }
+    return dir;
 }
