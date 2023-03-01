@@ -16,7 +16,7 @@ async function handleSignInSubmit(event) {
     // send to server for registering
     let makeAssertionOptions;
     try {
-        var res = await fetch('/pwassertionOptions', {
+        var res = await fetch(getFolder() + '/pwassertionOptions', {
             method: 'POST', // or 'PUT'
             body: formData, // data can be `string` or {object}!
             headers: {
@@ -55,7 +55,7 @@ async function handleSignInSubmit(event) {
     Swal.fire({
         title: 'Logging In...',
         text: 'Tap your security key to login.',
-        imageUrl: "/images/securitykey.min.svg",
+        imageUrl: getFolder() + "/images/securitykey.min.svg",
         showCancelButton: true,
         showConfirmButton: false,
         focusConfirm: false,
@@ -93,14 +93,14 @@ async function verifyAssertionWithServer(assertedCredential) {
         response: {
             authenticatorData: coerceToBase64Url(authData),
             clientDataJson: coerceToBase64Url(clientDataJSON),
-            //userHandle: userHandle !== null ? coerceToBase64Url(userHandle) : null,
+            userHandle: userHandle !== null && userHandle.length > 0 ? coerceToBase64Url(userHandle) : null,
             signature: coerceToBase64Url(sig)
         }
     };
 
     let response;
     try {
-        let res = await fetch("/pwmakeAssertion", {
+        let res = await fetch(getFolder() + "/pwmakeAssertion", {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers: {
@@ -134,5 +134,41 @@ async function verifyAssertionWithServer(assertedCredential) {
         timer: 2000
     });
 
-    window.location.href = "/index";
+    let returnUrl = findGetParameter('ReturnUrl');
+    if (!returnUrl) {
+        returnUrl = getFolder();
+    }
+    window.location.href = returnUrl;
+}
+
+/**
+* 
+* Get application deployment folder
+* empty string if root
+* */
+function getFolder() {
+    var dir = "";
+    try {
+        dir = document.getElementById('BasePath').value;
+    } catch (e) {
+    }
+    return dir;
+}
+
+/**
+* 
+* Helper for extracting returnurl from url parameters 
+* 
+* */
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
 }

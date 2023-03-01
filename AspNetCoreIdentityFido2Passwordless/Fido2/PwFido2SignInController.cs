@@ -55,6 +55,8 @@ public class PwFido2SignInController : Controller
             if (!string.IsNullOrEmpty(username))
             {
                 var identityUser = await _userManager.FindByNameAsync(username);
+                if (identityUser == null) throw new ArgumentException("Username not found");
+
                 var user = new Fido2User
                 {
                     DisplayName = identityUser!.UserName,
@@ -109,7 +111,7 @@ public class PwFido2SignInController : Controller
             // 2. Get registered credential from database
             var creds = await _fido2Store.GetCredentialByIdAsync(clientResponse.Id);
 
-            if (creds == null || creds.UserName == null)
+            if (creds == null)
             {
                 throw new Exception("Unknown credentials");
             }
@@ -124,7 +126,7 @@ public class PwFido2SignInController : Controller
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
             };
 
-            if(creds.PublicKey == null)
+            if (creds.PublicKey == null)
             {
                 throw new InvalidOperationException($"No public key");
             }
