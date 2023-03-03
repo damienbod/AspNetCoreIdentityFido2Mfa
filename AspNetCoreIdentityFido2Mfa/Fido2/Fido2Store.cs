@@ -106,7 +106,7 @@ public class Fido2Store
             return Encoding.UTF8.GetBytes(userName);
         }
 
-       throw new ArgumentNullException(nameof(userName));
+        throw new ArgumentNullException(nameof(userName));
     }
 }
 
