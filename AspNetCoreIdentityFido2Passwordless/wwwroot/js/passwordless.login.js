@@ -140,35 +140,3 @@ async function verifyAssertionWithServer(assertedCredential) {
     }
     window.location.href = returnUrl;
 }
-
-/**
-* 
-* Get application deployment folder
-* empty string if root
-* */
-function getFolder() {
-    var dir = "";
-    try {
-        dir = document.getElementById('BasePath').value;
-    } catch (e) {
-    }
-    return dir;
-}
-
-/**
-* 
-* Helper for extracting returnurl from url parameters 
-* 
-* */
-function findGetParameter(parameterName) {
-    var result = null,
-        tmp = [];
-    location.search
-        .substr(1)
-        .split("&")
-        .forEach(function (item) {
-            tmp = item.split("=");
-            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-        });
-    return result;
-}
