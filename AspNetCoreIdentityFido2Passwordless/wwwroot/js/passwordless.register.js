@@ -181,17 +181,3 @@ async function registerCredentialWithServer(formData) {
 
     return data;
 }
-
-/**
-* 
-* Get application deployment folder
-* empty string if root
-* */
-function getFolder() {
-    var dir = "";
-    try {
-        dir = document.getElementById('BasePath').value;
-    } catch (e) {
-    }
-    return dir;
-}
