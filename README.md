@@ -20,6 +20,7 @@ Update-Database
 
 ## History
 
+- 2023-06-20 Updated packages
 - 2023-04-28 Updated packages
 - 2023-02-18 Updated packages, improved passwordless login
 - 2022-12-31 Updated to .NET 7, fix passwordless login
