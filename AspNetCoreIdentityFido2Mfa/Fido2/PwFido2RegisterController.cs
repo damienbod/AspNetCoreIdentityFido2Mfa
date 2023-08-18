@@ -141,7 +141,8 @@ public class PwFido2RegisterController : Controller
                     SignatureCounter = success.Result.Counter,
                     CredType = success.Result.CredType,
                     RegDate = DateTime.Now,
-                    AaGuid = success.Result.AaGuid
+                    //AaGuid = success.Result.AaGuid // version 4
+                    AaGuid = success.Result.Aaguid
                 });
             }
 
