@@ -20,7 +20,7 @@ Update-Database
 
 ## History
 
-- 2023-08-18 Updated packages, Fido2 4.0.0-beta3
+- 2023-08-18 Updated packages, revert to Fido2 3.0.1 => problems with beta version
 - 2023-06-20 Updated packages, Fido2 4.0.0-beta1
 - 2023-04-28 Updated packages
 - 2023-02-18 Updated packages, improved passwordless login
