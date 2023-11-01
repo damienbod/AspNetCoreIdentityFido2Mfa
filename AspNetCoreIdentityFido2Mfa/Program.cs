@@ -12,7 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddTokenProvider<Fifo2UserTwoFactorTokenProvider>("FIDO2");
+    .AddTokenProvider<Fido2UserTwoFactorTokenProvider>("FIDO2");
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -64,10 +64,7 @@ app.UseAuthorization();
 
 app.UseSession();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
-    endpoints.MapControllers();
-});
+app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

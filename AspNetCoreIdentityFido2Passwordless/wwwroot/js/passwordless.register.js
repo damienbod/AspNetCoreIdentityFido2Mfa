@@ -4,6 +4,13 @@ async function handleRegisterSubmit(event) {
     event.preventDefault();
 
     let username = this.username.value;
+    if (!(/^[a-zA-Z0-9.@]+$/.test(username))) {
+        let msg = "Invalid username";
+        console.error(msg);
+        showErrorAlert(msg);
+        return;
+    }
+
     let displayName = this.displayName.value;
 
     // possible values: none, direct, indirect
@@ -63,7 +70,7 @@ async function handleRegisterSubmit(event) {
     Swal.fire({
         title: 'Registering...',
         text: 'Tap your security key to finish registration.',
-        imageUrl: "/images/securitykey.min.svg",
+        imageUrl: getFolder() + "/images/securitykey.min.svg",
         showCancelButton: true,
         showConfirmButton: false,
         focusConfirm: false,
@@ -84,7 +91,6 @@ async function handleRegisterSubmit(event) {
         showErrorAlert(msg, e);
     }
 
-
     console.log("PublicKeyCredential Created", newCredential);
 
     try {
@@ -98,7 +104,7 @@ async function handleRegisterSubmit(event) {
 async function fetchMakeCredentialOptions(formData) {
     id = "RequestVerificationToken" 
 
-    let response = await fetch('/pwmakeCredentialOptions', {
+    let response = await fetch(getFolder() + '/pwmakeCredentialOptions', {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
@@ -161,7 +167,7 @@ async function registerNewCredential(newCredential) {
 }
 
 async function registerCredentialWithServer(formData) {
-    let response = await fetch('/pwmakeCredential', {
+    let response = await fetch(getFolder() + '/pwmakeCredential', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {

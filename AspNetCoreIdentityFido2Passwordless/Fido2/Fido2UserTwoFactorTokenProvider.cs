@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
 
 namespace Fido2Identity;
 
-public class Fifo2UserTwoFactorTokenProvider : IUserTwoFactorTokenProvider<IdentityUser>
+public class Fido2UserTwoFactorTokenProvider : IUserTwoFactorTokenProvider<IdentityUser>
 {
     public Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<IdentityUser> manager, IdentityUser user)
     {
