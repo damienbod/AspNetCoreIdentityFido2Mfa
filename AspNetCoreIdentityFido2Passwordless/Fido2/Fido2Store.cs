@@ -14,7 +14,7 @@ public class Fido2Store
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<ICollection<FidoCredential>> GetCredentialsByUserNameAsync(string username)
+    public async Task<ICollection<FidoCredential>> GetCredentialsByUserNameAsync(string? username)
     {
         return await _applicationDbContext.FidoCredentials.Where(c => c.UserName == username).ToListAsync();
     }
@@ -89,14 +89,24 @@ public class Fido2Store
         }
 
         return await _applicationDbContext.Users
-                .Where(u => Encoding.UTF8.GetBytes(u.UserName)
+                .Where(u => u.UserName != null && Fido2Store.GetUserNameInBytes(u.UserName)
                 .SequenceEqual(cred.UserId))
                 .Select(u => new Fido2User
                 {
                     DisplayName = u.UserName,
                     Name = u.UserName,
-                    Id = Encoding.UTF8.GetBytes(u.UserName) // byte representation of userID is required
+                    Id = GetUserNameInBytes(u.UserName) // byte representation of userID is required
                 }).ToListAsync();
+    }
+
+    public static byte[] GetUserNameInBytes(string? userName)
+    {
+        if(userName != null)
+        {
+            return Encoding.UTF8.GetBytes(userName);
+        }
+
+        throw new ArgumentNullException(nameof(userName));
     }
 }
 

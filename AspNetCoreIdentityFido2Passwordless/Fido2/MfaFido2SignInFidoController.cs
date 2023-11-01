@@ -60,7 +60,7 @@ public class MfaFido2SignInFidoController : Controller
                 {
                     DisplayName = identityUser.UserName,
                     Name = identityUser.UserName,
-                    Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                    Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
                 };
 
                 if (user == null) throw new ArgumentException("Username was not registered");
@@ -118,11 +118,11 @@ public class MfaFido2SignInFidoController : Controller
             var storedCounter = creds.SignatureCounter;
 
             // 4. Create callback to check if userhandle owns the credentialId
-            async Task<bool> callback(IsUserHandleOwnerOfCredentialIdParams args, CancellationToken cancellationToken)
+            IsUserHandleOwnerOfCredentialIdAsync callback = async (args, cancellationToken) =>
             {
                 var storedCreds = await _fido2Store.GetCredentialsByUserHandleAsync(args.UserHandle);
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
-            }
+            };
 
             if (creds.PublicKey == null)
             {

@@ -55,11 +55,13 @@ public class PwFido2SignInController : Controller
             if (!string.IsNullOrEmpty(username))
             {
                 var identityUser = await _userManager.FindByNameAsync(username);
+                if (identityUser == null) throw new ArgumentException("Username not found");
+
                 var user = new Fido2User
                 {
-                    DisplayName = identityUser.UserName,
+                    DisplayName = identityUser!.UserName,
                     Name = identityUser.UserName,
-                    Id = Encoding.UTF8.GetBytes(identityUser.UserName) // byte representation of userID is required
+                    Id = Fido2Store.GetUserNameInBytes(identityUser.UserName) // byte representation of userID is required
                 };
 
                 if (user == null) throw new ArgumentException("Username was not registered");
@@ -124,7 +126,7 @@ public class PwFido2SignInController : Controller
                 return storedCreds.Any(c => c.Descriptor != null && c.Descriptor.Id.SequenceEqual(args.CredentialId));
             };
 
-            if(creds.PublicKey == null)
+            if (creds.PublicKey == null)
             {
                 throw new InvalidOperationException($"No public key");
             }
