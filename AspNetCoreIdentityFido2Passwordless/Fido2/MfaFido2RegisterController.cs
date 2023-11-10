@@ -137,7 +137,7 @@ public class MfaFido2RegisterController : Controller
                     UserHandle = success.Result.User.Id,
                     SignatureCounter = success.Result.Counter,
                     CredType = success.Result.CredType,
-                    RegDate = DateTime.Now,
+                    RegDate = DateTimeOffset.Now,
                     //AaGuid = success.Result.AaGuid // version 4
                     AaGuid = success.Result.Aaguid
                 });

@@ -58,7 +58,7 @@ namespace AspNetCoreIdentityFido2Passwordless.Migrations
                     UserHandle = table.Column<byte[]>(nullable: true),
                     SignatureCounter = table.Column<long>(nullable: false),
                     CredType = table.Column<string>(nullable: true),
-                    RegDate = table.Column<DateTime>(nullable: false),
+                    RegDate = table.Column<DateTimeOffset>(nullable: false),
                     AaGuid = table.Column<Guid>(nullable: false),
                     DescriptorJson = table.Column<string>(nullable: true)
                 },
