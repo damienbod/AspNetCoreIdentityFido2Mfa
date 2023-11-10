@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<FidoStoredCredential>().HasKey(m => m.Id);
+        builder.Entity<FidoStoredCredential>().Property(b => b.Id).ValueGeneratedOnAdd();
 
         base.OnModelCreating(builder);
     }
