@@ -129,7 +129,7 @@ public class MfaFido2RegisterController : Controller
             if(success.Result != null)
             {
                 // 3. Store the credentials in db
-                await _fido2Store.AddCredentialToUserAsync(options.User, new FidoStoredCredential
+                await _fido2Store.AddCredentialToUserAsync(options.User, new FidoCredential
                 {
                     UserName = options.User.Name,
                     Descriptor = new PublicKeyCredentialDescriptor(success.Result.CredentialId),

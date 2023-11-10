@@ -47,7 +47,7 @@ namespace AspNetCoreIdentityFido2Mfa.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FidoStoredCredential",
+                name: "FidoCredential",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -64,7 +64,7 @@ namespace AspNetCoreIdentityFido2Mfa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FidoStoredCredential", x => x.Id);
+                    table.PrimaryKey("PK_FidoCredential", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -231,7 +231,7 @@ namespace AspNetCoreIdentityFido2Mfa.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FidoStoredCredential");
+                name: "FidoCredentials");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
