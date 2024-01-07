@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-
-[assembly: HostingStartup(typeof(AspNetCoreIdentityFido2Mfa.Areas.Identity.IdentityHostingStartup))]
+﻿[assembly: HostingStartup(typeof(AspNetCoreIdentityFido2Mfa.Areas.Identity.IdentityHostingStartup))]
 namespace AspNetCoreIdentityFido2Mfa.Areas.Identity;
 
 public class IdentityHostingStartup : IHostingStartup
