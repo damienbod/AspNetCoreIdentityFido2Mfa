@@ -20,6 +20,7 @@ Update-Database
 
 ## History
 
+- 2024-01-07 .NET 8
 - 2023-11-10 Updated packages
 - 2023-08-18 Updated packages, revert to Fido2 3.0.1 => problems with beta version
 - 2023-06-20 Updated packages, Fido2 4.0.0-beta1
