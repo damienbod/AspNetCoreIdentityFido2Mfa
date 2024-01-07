@@ -4,7 +4,8 @@ async function handleRegisterSubmit(event) {
     event.preventDefault();
 
     let username = this.username.value;
-    if (!(/^[a-zA-Z0-9.@]+$/.test(username))) {
+    console.error(username);
+    if (!(/^\S+@\S+\.\S+$/.test(username))) {
         let msg = "Invalid username";
         console.error(msg);
         showErrorAlert(msg);
