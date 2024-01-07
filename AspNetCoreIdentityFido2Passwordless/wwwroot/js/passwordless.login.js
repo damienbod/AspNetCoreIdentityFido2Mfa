@@ -136,7 +136,8 @@ async function verifyAssertionWithServer(assertedCredential) {
 
     let returnUrl = findGetParameter('ReturnUrl');
     if (!returnUrl) {
-        returnUrl = getFolder();
+        returnUrl = window.location.origin;
     }
+
     window.location.href = returnUrl;
 }
