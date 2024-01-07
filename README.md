@@ -5,7 +5,7 @@
 ## Database
 
 ```
-Add-Migration "init_identity" 
+Add-Migration "init_identity_new" 
 ```
 
 ```
