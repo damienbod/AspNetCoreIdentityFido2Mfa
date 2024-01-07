@@ -1,8 +1,8 @@
 using AspNetCoreIdentityFido2Passwordless.Data;
+using Fido2Identity;
+using Fido2NetLib;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Fido2NetLib;
-using Fido2Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
