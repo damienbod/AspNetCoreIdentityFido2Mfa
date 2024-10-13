@@ -20,6 +20,7 @@ Update-Database
 
 ## History
 
+- 2024-10-13 Updated packages
 - 2024-05-02 Updated packages and build
 - 2024-01-07 .NET 8
 - 2023-11-10 Updated packages
