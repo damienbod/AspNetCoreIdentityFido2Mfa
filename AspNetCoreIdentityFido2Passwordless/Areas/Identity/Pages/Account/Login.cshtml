@@ -18,18 +18,20 @@
         <section>
             <form action="/mfa" method="post" id="signin">
                 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
-                <div class="form-group">
-                    <label name="username">Email</label>
-                    <input name="username" required class="form-control" />
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email address</label>
+                    <input class="form-control" required id="username" aria-describedby="emailHelp">
                     <input type="hidden" id="BasePath" name="BasePath" value="@Url.Content("~")">
+                    <div id="emailHelp" class="form-text">Enter username</div>
                 </div>
 
-                <div class="field">
+                <div>
                     <div class="control">
                         <button class="btn btn-primary">Login</button>
                     </div>
                 </div>
             </form>
+     
         </section>
     </div>
 
