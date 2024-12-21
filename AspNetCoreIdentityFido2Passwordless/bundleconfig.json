@@ -17,7 +17,7 @@
     // Optionally specify minification options
     "minify": {
       "enabled": true,
-      "renameLocals": true
+      "renameLocals": false
     },
     // Optinally generate .map file
     "sourceMap": false
@@ -29,7 +29,7 @@
       "node_modules/bootstrap/dist/css/bootstrap.min.css",
       "node_modules/sweetalert2/dist/sweetalert2.min.css"
     ],
-    "minify": { "enabled": true }
+    "minify": { "enabled": false }
   },
   // Vendor JS
   {
@@ -41,7 +41,7 @@
     ],
     "minify": {
       "enabled": false,
-      "renameLocals": true
+      "renameLocals": false
     },
     "sourceMap": false
   },
@@ -55,8 +55,8 @@
       "node_modules/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"
     ],
     "minify": {
-      "enabled": true,
-      "renameLocals": true
+      "enabled": false,
+      "renameLocals": false
     },
     "sourceMap": false
   }
