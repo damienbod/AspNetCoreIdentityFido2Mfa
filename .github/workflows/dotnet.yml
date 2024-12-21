@@ -16,15 +16,15 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '9.0.x'
         include-prerelease: True
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Setup Node.js 14
+    - name: Setup Node.js 20
       uses: actions/setup-node@v4
       with:
-        node-version: 14
+        node-version: 20
 
     - name: Installing Dependencies AspNetCoreIdentityFido2Mfa
       working-directory: AspNetCoreIdentityFido2Mfa
