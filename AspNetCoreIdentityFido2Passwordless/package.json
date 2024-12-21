@@ -3,10 +3,10 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "bootstrap": "4.6.0",
-    "jquery": "3.6.3",
+    "bootstrap": "5.3.3",
+    "jquery": "3.7.1",
     "jquery-ajax-unobtrusive": "3.2.6",
-    "jquery-validation": "1.19.5",
+    "jquery-validation": "1.21.0",
     "jquery-validation-unobtrusive": "4.0.0",
     "popper.js": "^1.16.1",
     "sweetalert2": "^11.6.16"

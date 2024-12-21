@@ -7,7 +7,7 @@
     "inputFiles": [
       "wwwroot/css/site.css"
     ],
-    "minify": { "enabled": true }
+    "minify": { "enabled": false }
   },
   {
     "outputFileName": "wwwroot/js/site.min.js",
@@ -41,7 +41,7 @@
     ],
     "minify": {
       "enabled": false,
-      "renameLocals": true
+      "renameLocals": false
     },
     "sourceMap": false
   },
@@ -55,8 +55,8 @@
       "node_modules/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"
     ],
     "minify": {
-      "enabled": true,
-      "renameLocals": true
+      "enabled": false,
+      "renameLocals": false
     },
     "sourceMap": false
   }
