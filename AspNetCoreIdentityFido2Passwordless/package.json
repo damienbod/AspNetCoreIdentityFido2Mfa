@@ -9,6 +9,6 @@
     "jquery-validation": "1.21.0",
     "jquery-validation-unobtrusive": "4.0.0",
     "popper.js": "^1.16.1",
-    "sweetalert2": "^11.6.16"
+    "sweetalert2": "^11.22.4"
   }
 }
